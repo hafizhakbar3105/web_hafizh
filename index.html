@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arduino Modern Store | Premium Microcontrollers</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1>Arduino<span>Tech</span></h1>
+            <p>Elevating your DIY Projects with Premium Hardware</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#produk">Product</a></li>
+            <li><a href="#harga">Pricelist</a></li>
+            <li><a href="#order">Order</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section id="produk" class="card">
+            <span class="badge">Featured Product</span>
+            <h2>Arduino Uno R3 Original</h2>
+            <div class="img-container">
+                <img src="arduino.png" alt="Arduino Uno R3" class="product-img">
+            </div>
+            <div class="description">
+                <p>Papan mikrokontroler paling populer di dunia. Handal untuk pemula, powerful untuk profesional. Dilengkapi dengan chip ATmega328P original untuk stabilitas proyek maksimal.</p>
+                <a href="https://www.arduino.cc" target="_blank" class="link-btn">Official Datasheet &rarr;</a>
+            </div>
+        </section>
+
+        <section id="harga" class="card">
+            <h2>Inventory Stock</h2>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Board Model</th>
+                            <th>Voltage</th>
+                            <th>Price</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Arduino Uno R3</td>
+                            <td>5V</td>
+                            <td><strong>Rp 185.000</strong></td>
+                            <td><span class="status ready">In Stock</span></td>
+                        </tr>
+                        <tr>
+                            <td>Arduino Mega 2560</td>
+                            <td>5V</td>
+                            <td><strong>Rp 275.000</strong></td>
+                            <td><span class="status ready">In Stock</span></td>
+                        </tr>
+                        <tr>
+                            <td>Arduino Nano</td>
+                            <td>5V</td>
+                            <td><strong>Rp 75.000</strong></td>
+                            <td><span class="status empty">Sold Out</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="order" class="card">
+            <h2>Quick Order Form</h2>
+            <form action="#">
+                <div class="input-group">
+                    <label for="nama">Full Name</label>
+                    <input type="text" id="nama" placeholder="Enter your name" required>
+                </div>
+                <div class="input-group">
+                    <label for="wa">WhatsApp Number</label>
+                    <input type="tel" id="wa" placeholder="e.g. 08123456789" required>
+                </div>
+                <div class="input-group">
+                    <label for="alamat">Shipping Address</label>
+                    <textarea id="alamat" rows="3" placeholder="Enter your full address" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Place Order Now</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 ArduinoTech Indonesia. High Performance Controllers.</p>
+    </footer>
+
+    <script src="script.js"></script>
+
+
+
+
+</body>
+</html>
