@@ -1,1 +1,1 @@
-![Teks Alternatif](img/arduino.png)
+![Kami Dari ](img/Pancasila.png)
