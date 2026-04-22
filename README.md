@@ -1,17 +1,23 @@
-# Portofolio Muhammad Hafizh Akbar Solehudin
+# Nusa Geospatial Solutions - Landing Page
 
-Proyek website portofolio pribadi yang dibangun menggunakan teknologi web dasar.
+<p align="center">
+  <img src="img/Brand.png" alt="Nusa Geospatial Logo" width="200">
+</p>
 
-## Struktur Folder
-- `index.html` : Struktur utama dokumen.
-- `style.css` : Desain responsif dengan skema warna Biru, Hijau, dan Kuning.
-- `script.js` : Logika interaktif dan manipulasi DOM.
-- `img/` : Folder untuk menyimpan aset gambar (foto profil, background).
+## 📌 Deskripsi Proyek
+Proyek ini adalah landing page modern untuk **Nusa Geospatial Solutions (NGS)**, sebuah perusahaan penyedia layanan dan alat survey terintegrasi (GNSS, Total Station, Drone). Website ini dirancang dengan estetika korporat yang bersih, profesional, dan responsif.
 
-## Teknologi yang Digunakan
-1. HTML5 (Semantic, Forms, Tables)
-2. CSS3 (Box Model, Flexbox, Grid)
-3. JavaScript (ES6+, DOM Manipulation)
+## 🚀 Fitur Utama
+- **Modern UI/UX**: Menggunakan desain profesional dengan palet warna brand (Dark Blue & Green).
+- **Responsive Design**: Tampilan yang optimal di perangkat mobile, tablet, dan desktop.
+- **Scroll Animations**: Efek *reveal* (muncul perlahan) saat pengguna melakukan scroll.
+- **Parallax Background**: Background hero dengan efek *fixed* yang memberikan kesan kedalaman.
+- **Floating WhatsApp**: Integrasi cepat untuk layanan pelanggan via WhatsApp.
+- **Navigation Scrolled Effect**: Navbar yang mengecil secara otomatis saat halaman digulir.
 
-## Cara Menjalankan
-Cukup buka file `index.html` pada browser kesayangan Anda.
+## 🛠️ Teknologi yang Digunakan
+- **HTML5**: Struktur web semantik.
+- **CSS3 (Custom & Tailwind)**: Menggunakan Tailwind CSS untuk utilitas dan Custom CSS untuk efek khusus.
+- **JavaScript (Native)**: Logika untuk menu mobile, animasi scroll, dan efek navbar.
+- **Google Fonts**: Menggunakan font *Plus Jakarta Sans* untuk tampilan modern.
+
