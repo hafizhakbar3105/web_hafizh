@@ -3,103 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arduino Modern Store | Premium Microcontrollers</title>
+    <title>Nusa Geospatial Solutions | Solusi Presisi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="bg-white text-slate-800">
 
-    <header>
-        <div class="header-content">
-            <h1>Arduino<span>Tech</span></h1>
-            <p>Elevating your DIY Projects with Premium Hardware</p>
+    <nav class="flex items-center justify-between px-6 md:px-12 py-5 bg-white sticky top-0 z-50 shadow-sm transition-all duration-300" id="main-nav">
+        <div class="flex items-center gap-2">
+            <img src="img/NGS.png" alt="Logo" class="h-10 md:h-16 w-auto">
         </div>
-    </header>
-
-    <nav>
-        <ul>
-            <li><a href="#produk">Product</a></li>
-            <li><a href="#harga">Pricelist</a></li>
-            <li><a href="#order">Order</a></li>
-        </ul>
+        <div class="hidden md:flex gap-8 font-semibold text-[#043978]">
+            <a href="#home" class="hover:text-[#5AAC41] transition-colors">Home</a>
+            <a href="#produk" class="hover:text-[#5AAC41] transition-colors">Produk</a>
+            <a href="#rental" class="hover:text-[#5AAC41] transition-colors">Rental</a>
+            <a href="#kalibrasi" class="hover:text-[#5AAC41] transition-colors">Kalibrasi</a>
+            <a href="#tentang" class="hover:text-[#5AAC41] transition-colors">Tentang Kami</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="#kontak" class="bg-[#043978] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#195994] transition shadow-md">
+                <i class="fas fa-phone-alt text-xs"></i> Hubungi Kami
+            </a>
+            <button id="mobile-menu-btn" class="md:hidden text-[#043978] text-2xl focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
     </nav>
 
-    <main>
-        <section id="produk" class="card">
-            <span class="badge">Featured Product</span>
-            <h2>Arduino Uno R3 Original</h2>
-            <div class="img-container">
-                <img src="arduino.png" alt="Arduino Uno R3" class="product-img">
-            </div>
-            <div class="description">
-                <p>Papan mikrokontroler paling populer di dunia. Handal untuk pemula, powerful untuk profesional. Dilengkapi dengan chip ATmega328P original untuk stabilitas proyek maksimal.</p>
-                <a href="https://www.arduino.cc" target="_blank" class="link-btn">Official Datasheet &rarr;</a>
-            </div>
-        </section>
+    <div id="mobile-menu" class="fixed inset-0 bg-[#043978] z-[60] flex flex-col items-center justify-center gap-8 text-white text-2xl font-bold translate-x-full transition-transform duration-300">
+        <button id="close-menu" class="absolute top-8 right-8 text-3xl">&times;</button>
+        <a href="#home" class="mobile-link">Home</a>
+        <a href="#produk" class="mobile-link">Produk</a>
+        <a href="#rental" class="mobile-link">Rental</a>
+        <a href="#tentang" class="mobile-link">Tentang Kami</a>
+    </div>
 
-        <section id="harga" class="card">
-            <h2>Inventory Stock</h2>
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Board Model</th>
-                            <th>Voltage</th>
-                            <th>Price</th>
-                            <th>Availability</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Arduino Uno R3</td>
-                            <td>5V</td>
-                            <td><strong>Rp 185.000</strong></td>
-                            <td><span class="status ready">In Stock</span></td>
-                        </tr>
-                        <tr>
-                            <td>Arduino Mega 2560</td>
-                            <td>5V</td>
-                            <td><strong>Rp 275.000</strong></td>
-                            <td><span class="status ready">In Stock</span></td>
-                        </tr>
-                        <tr>
-                            <td>Arduino Nano</td>
-                            <td>5V</td>
-                            <td><strong>Rp 75.000</strong></td>
-                            <td><span class="status empty">Sold Out</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+    <section id="home" class="hero-bg h-[650px] flex items-center px-6 md:px-12 text-white overflow-hidden relative">
+        <div class="container mx-auto">
+            <div class="max-w-4xl relative z-10 animate-fade-in-up">
+                <div class="w-14 h-1.5 bg-[#E7D532] mb-8 rounded-full"></div>
+                
+                <h1 class="text-5xl md:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
+                    Solusi Presisi untuk<br>
+                    <span class="text-white">Masa Depan Geospatial</span>
+                </h1>
+                
+                <p class="text-lg md:text-xl mb-10 opacity-85 max-w-2xl leading-relaxed">
+                    Penyedia layanan dan alat survey terintegrasi. Kami menghadirkan teknologi GNSS, 
+                    Total Station, dan Drone terbaik untuk mendukung akurasi proyek infrastruktur Anda.
+                </p>
+                
+                <div class="flex flex-wrap gap-5">
+                    <button class="bg-[#5AAC41] hover:bg-[#4d9437] px-10 py-4 rounded-lg font-bold flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl shadow-green-900/20">
+                        Jelajahi Produk <i class="fas fa-arrow-right text-sm"></i>
+                    </button>
+                    <button class="border-2 border-white/60 hover:border-white hover:bg-white hover:text-[#043978] px-10 py-4 rounded-lg font-bold transition-all transform hover:scale-105">
+                        Konsultasi Layanan
+                    </button>
+                </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="order" class="card">
-            <h2>Quick Order Form</h2>
-            <form action="#">
-                <div class="input-group">
-                    <label for="nama">Full Name</label>
-                    <input type="text" id="nama" placeholder="Enter your name" required>
-                </div>
-                <div class="input-group">
-                    <label for="wa">WhatsApp Number</label>
-                    <input type="tel" id="wa" placeholder="e.g. 08123456789" required>
-                </div>
-                <div class="input-group">
-                    <label for="alamat">Shipping Address</label>
-                    <textarea id="alamat" rows="3" placeholder="Enter your full address" required></textarea>
-                </div>
-                <button type="submit" class="submit-btn">Place Order Now</button>
-            </form>
-        </section>
-    </main>
+    <section class="py-20 px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
+        <div class="border-l-4 border-[#043978] pl-6 group reveal">
+            <div class="w-12 h-12 bg-[#043978] text-white rounded-lg flex items-center justify-center mb-6 transition-all group-hover:bg-[#5AAC41] group-hover:rotate-12 shadow-lg">
+                <i class="fas fa-box text-xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-[#043978]">Rental</h3>
+            <p class="text-slate-500 leading-relaxed">Dukung efisiensi proyek Anda dengan armada alat survey terbaru yang selalu terkalibrasi harian.</p>
+        </div>
+        <div class="border-l-4 border-[#043978] pl-6 group reveal">
+            <div class="w-12 h-12 bg-[#043978] text-white rounded-lg flex items-center justify-center mb-6 transition-all group-hover:bg-[#5AAC41] group-hover:rotate-12 shadow-lg">
+                <i class="fas fa-cog text-xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-[#043978]">Calibration & Service</h3>
+            <p class="text-slate-500 leading-relaxed">Menjamin akurasi maksimal melalui laboratorium kalibrasi dengan teknisi ahli bersertifikat.</p>
+        </div>
+        <div class="border-l-4 border-[#043978] pl-6 group reveal">
+            <div class="w-12 h-12 bg-[#043978] text-white rounded-lg flex items-center justify-center mb-6 transition-all group-hover:bg-[#5AAC41] group-hover:rotate-12 shadow-lg">
+                <i class="fas fa-shopping-cart text-xl"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-[#043978]">Sales & Solutions</h3>
+            <p class="text-slate-500 leading-relaxed">Investasi cerdas untuk teknologi jangka panjang dengan perangkat survei original dan bergaransi.</p>
+        </div>
+    </section>
 
-    <footer>
-        <p>&copy; 2026 ArduinoTech Indonesia. High Performance Controllers.</p>
+    <section id="tentang" class="py-24 px-6 md:px-12 grid grid-cols-1 md:grid-cols-2 gap-16 items-center max-w-7xl mx-auto">
+        <div class="reveal">
+            <div class="w-12 h-1.5 bg-[#5AAC41] mb-8 rounded-full"></div>
+            <h2 class="text-4xl font-bold text-[#043978] mb-8">Corporate Vision</h2>
+            <blockquote class="text-2xl font-semibold text-[#195994] border-l-4 border-[#5AAC41] pl-8 leading-relaxed italic">
+                "Nusa Geospatial Solutions lahir dari visi untuk memajukan industri pemetaan di Indonesia melalui teknologi presisi."
+            </blockquote>
+            <div class="grid grid-cols-3 gap-4 md:gap-8 mt-12 text-center">
+                <div><h5 class="text-3xl font-extrabold text-[#043978]">15+</h5><p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Thn Pengalaman</p></div>
+                <div><h5 class="text-3xl font-extrabold text-[#043978]">500+</h5><p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Proyek Selesai</p></div>
+                <div><h5 class="text-3xl font-extrabold text-[#043978]">100%</h5><p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Kepuasan Klien</p></div>
+            </div>
+        </div>
+        <div class="flex justify-center relative reveal">
+            <div class="absolute -top-4 -right-4 w-full h-full border-2 border-[#E7D532] rounded-2xl -z-10"></div>
+            <img src="img/Pancasila.png" class="rounded-2xl shadow-2xl w-full max-w-sm object-cover aspect-square" alt="Team">
+        </div>
+    </section>
+
+    <section id="kontak" class="mx-6 md:mx-12 my-20 bg-[#043978] rounded-[2rem] md:rounded-[3rem] p-10 md:p-20 text-center text-white relative overflow-hidden shadow-2xl reveal">
+        <div class="relative z-10">
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Siap Memulai Proyek Anda?</h2>
+            <p class="text-lg opacity-80 mb-10 max-w-xl mx-auto">Konsultasikan kebutuhan geospatial Anda sekarang dan dapatkan solusi terbaik dari tim ahli kami.</p>
+            <div class="flex flex-wrap justify-center gap-5">
+                <button class="bg-[#5AAC41] text-white px-10 py-4 rounded-xl font-bold flex items-center gap-2 hover:bg-[#4d9437] transition shadow-lg transform hover:-translate-y-1">
+                    <i class="fas fa-phone-alt"></i> Hubungi Kami
+                </button>
+                <button class="border border-white/30 px-10 py-4 rounded-xl font-bold hover:bg-white hover:text-[#043978] transition transform hover:-translate-y-1">
+                    Email Kami
+                </button>
+            </div>
+        </div>
+        <div class="absolute -bottom-20 -right-20 w-80 h-80 bg-white/5 rounded-full blur-3xl"></div>
+    </section>
+
+    <footer class="bg-[#0f172a] text-white pt-24 pb-12 px-6 md:px-12 relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+            <div class="col-span-1">
+                <img src="img/arduino.png" alt="Logo" class="h-14 w-auto mb-8 grayscale brightness-200">
+                <p class="text-slate-400 text-sm leading-relaxed mb-8">Solusi geospatial terpercaya untuk masa depan infrastruktur Indonesia dengan teknologi terkini.</p>
+                <div class="flex">
+                    <input type="email" placeholder="Email Anda" class="bg-white/5 border border-white/10 px-4 py-3 rounded-l-lg w-full text-sm focus:outline-none focus:border-[#5AAC41]">
+                    <button class="bg-[#5AAC41] px-5 rounded-r-lg hover:bg-[#4d9437]"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+            <div>
+                <h5 class="font-bold mb-8 uppercase tracking-widest text-sm text-white">Produk</h5>
+                <ul class="text-slate-400 text-sm space-y-4">
+                    <li><a href="#" class="hover:text-[#5AAC41] transition">Total Station</a></li>
+                    <li><a href="#" class="hover:text-[#5AAC41] transition">GNSS/GPS</a></li>
+                    <li><a href="#" class="hover:text-[#5AAC41] transition">Drone Survey</a></li>
+                </ul>
+            </div>
+            <div>
+                <h5 class="font-bold mb-8 uppercase tracking-widest text-sm text-white">Layanan</h5>
+                <div class="text-slate-400 text-sm space-y-6">
+                    <div class="flex gap-4"><i class="fas fa-map-marker-alt text-[#5AAC41] mt-1"></i><p>Jakarta Selatan, Indonesia</p></div>
+                    <div class="flex gap-4"><i class="fas fa-phone-alt text-[#5AAC41] mt-1"></i><p>+62 812-3456-7890</p></div>
+                </div>
+            </div>
+            <div>
+                <h5 class="font-bold mb-8 uppercase tracking-widest text-sm text-white">Sosial Media</h5>
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#043978] transition"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#5AAC41] transition"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center pt-8 border-t border-white/5 text-[11px] text-slate-500 tracking-[0.2em]">
+            © 2026 NUSA GEOSPATIAL SOLUTIONS. ALL RIGHTS RESERVED.
+        </div>
     </footer>
 
+    <a href="https://wa.me/6281234567890" target="_blank" class="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[100] border-4 border-white">
+        <i class="fab fa-whatsapp text-4xl text-white"></i>
+    </a>
+
     <script src="script.js"></script>
-
-
-
-
 </body>
 </html>
