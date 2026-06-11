@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hubungi Kami | Nusa Geospatial Solutions</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Styling khusus untuk area Canvas TTD */
+        #signature-pad {
+            border: 2px dashed #cbd5e1;
+            border-radius: 1rem;
+            cursor: crosshair;
+            touch-action: none; /* Penting agar bisa ditandatangani via layar HP tanpa scroll */
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-white text-slate-800">
+
+    <nav class="flex items-center justify-between px-6 md:px-12 py-5 bg-white sticky top-0 z-50 shadow-sm transition-all duration-300" id="main-nav">
+        <div class="flex items-center gap-2">
+            <img src="img/NGS.png" alt="Logo" class="h-10 md:h-16 w-auto">
+        </div>
+        <div class="hidden md:flex gap-8 font-semibold text-[#043978]">
+            <a href="index.html" class="hover:text-[#5AAC41] transition-colors">Home</a>
+            <a href="produk.html" class="hover:text-[#5AAC41] transition-colors">Produk</a>
+            <a href="#rental" class="hover:text-[#5AAC41] transition-colors">Rental</a>
+            <a href="#kalibrasi" class="hover:text-[#5AAC41] transition-colors">Kalibrasi</a>
+            <a href="layanan.html" class="hover:text-[#5AAC41] transition-colors">Tentang Kami</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="layanan.html" class="bg-[#043978] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#195994] transition shadow-md">
+                <i class="fas fa-phone-alt text-xs"></i> Hubungi Kami
+            </a>
+            <button id="mobile-menu-btn" class="md:hidden text-[#043978] text-2xl focus:outline-none">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <header class="bg-[#043978] text-white py-16 px-6 md:px-12 text-center relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <span class="text-[#E7D532] text-xs font-bold uppercase tracking-widest bg-white/10 px-3 py-1.5 rounded-full">Layanan Pelanggan</span>
+            <h1 class="text-3xl md:text-5xl font-extrabold mt-4 mb-4 tracking-tight">Hubungi Tim Kami</h1>
+            <p class="text-sm md:text-base text-slate-200 max-w-2xl mx-auto opacity-90">
+                Konsultasikan kebutuhan teknis, layanan kalibrasi, atau penyewaan alat survey Anda. Silakan isi form persetujuan di bawah ini.
+            </p>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl w-full mx-auto px-6 md:px-12 py-16">
+        <div class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 p-8 md:p-12 border border-slate-100">
+            
+            <div class="mb-10 text-center">
+                <h2 class="text-2xl font-black text-[#043978] mb-2">Form Permintaan Layanan</h2>
+                <p class="text-sm text-slate-400">Gunakan form ini untuk mengirimkan detail permintaan Anda beserta tanda tangan digital pengesahan.</p>
+            </div>
+
+            <form id="contactForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Nama Lengkap / Instansi</label>
+                        <input type="text" required class="w-full bg-slate-50 border border-slate-200 px-5 py-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#5AAC41] focus:border-transparent transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Email Perusahaan</label>
+                        <input type="email" required class="w-full bg-slate-50 border border-slate-200 px-5 py-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#5AAC41] focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori Permintaan</label>
+                    <select class="w-full bg-slate-50 border border-slate-200 px-5 py-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#5AAC41] text-slate-600 transition">
+                        <option>Pembelian Unit Baru</option>
+                        <option>Rental Alat Survey</option>
+                        <option>Kalibrasi & Service</option>
+                        <option>Konsultasi Proyek Topografi</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Pesan Tambahan</label>
+                    <textarea rows="4" required class="w-full bg-slate-50 border border-slate-200 px-5 py-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#5AAC41] focus:border-transparent transition"></textarea>
+                </div>
+
+                <div class="mt-8 pt-8 border-t border-slate-100">
+                    <label class="block text-xs font-bold text-[#043978] uppercase tracking-wider mb-2 flex items-center gap-2">
+                        <i class="fas fa-pen-nib"></i> Tanda Tangan Digital Pemohon
+                    </label>
+                    <p class="text-[10px] text-slate-400 mb-4 italic">Silakan goreskan tanda tangan Anda di dalam kotak area putih di bawah ini sebagai bentuk validasi permintaan.</p>
+                    
+                    <div class="relative w-full">
+                        <canvas id="signature-pad" class="w-full h-48 md:h-64"></canvas>
+                        
+                        <button type="button" onclick="clearCanvas()" class="absolute top-4 right-4 bg-red-100 text-red-500 hover:bg-red-500 hover:text-white text-xs font-bold px-3 py-1.5 rounded-lg transition shadow-sm">
+                            <i class="fas fa-eraser"></i> Bersihkan TTD
+                        </button>
+                    </div>
+                    
+                    <input type="hidden" name="ttd_data" id="ttd_data">
+                </div>
+
+                <div class="pt-6 text-center">
+                    <button type="button" onclick="submitForm()" class="bg-[#5AAC41] hover:bg-[#4d9437] text-white px-12 py-4 rounded-xl font-bold uppercase tracking-widest text-sm shadow-lg shadow-green-900/20 transition transform hover:-translate-y-1 w-full md:w-auto">
+                        <i class="fas fa-paper-plane mr-2"></i> Kirim Permintaan Layanan
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+    <footer class="bg-[#0f172a] text-white py-8 text-center text-[10px] text-slate-500 tracking-[0.2em] mt-auto">
+        © 2026 NUSA GEOSPATIAL SOLUTIONS. ALL RIGHTS RESERVED.
+    </footer>
+
+    <script>
+        const canvas = document.getElementById('signature-pad');
+        const ctx = canvas.getContext('2d');
+        let isDrawing = false;
+
+        // Fungsi untuk menyesuaikan ukuran Canvas agar goresan tidak pecah/blur
+        function resizeCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            // Mengambil dimensi dari ukuran asli elemen di CSS
+            canvas.width = canvas.offsetWidth * ratio;
+            canvas.height = canvas.offsetHeight * ratio;
+            ctx.scale(ratio, ratio);
+            
+            // Konfigurasi pena TTD
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#043978'; // Warna tinta TTD (Navy)
+        }
+
+        // Panggil saat load & saat layar di-resize
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        // LOGIKA MENGGAMBAR UNTUK MOUSE (DESKTOP)
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
+
+        // LOGIKA MENGGAMBAR UNTUK LAYAR SENTUH (HP/TABLET)
+        canvas.addEventListener('touchstart', handleTouchStart, { passive: false });
+        canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function startDrawing(e) {
+            isDrawing = true;
+            draw(e);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            
+            // Dapatkan kordinat mouse
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(x, y);
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+            ctx.beginPath(); // Putus garis agar goresan berikutnya tidak menyambung
+        }
+
+        // Handler Khusus Touch (HP)
+        function handleTouchStart(e) {
+            e.preventDefault(); // Cegah scroll halaman saat TTD
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousedown", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault(); // Cegah scroll halaman saat TTD
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent("mousemove", {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        // Fungsi Bersihkan Canvas
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Simulasi Submit & Ekstrak Data TTD
+        function submitForm() {
+            // Mengecek apakah canvas kosong (belum ditandatangani)
+            const blank = document.createElement('canvas');
+            blank.width = canvas.width;
+            blank.height = canvas.height;
+            
+            if (canvas.toDataURL() === blank.toDataURL()) {
+                alert("Mohon bubuhkan Tanda Tangan Digital Anda sebelum mengirim form.");
+                return;
+            }
+
+            // Mengonversi goresan canvas menjadi gambar Base64
+            const dataURL = canvas.toDataURL('image/png');
+            document.getElementById('ttd_data').value = dataURL;
+
+            // Simulasi sukses
+            alert("Terima kasih! Pesan dan Tanda Tangan Anda berhasil disimpan ke sistem kami.");
+            
+            // Reset form setelah sukses
+            document.getElementById('contactForm').reset();
+            clearCanvas();
+        }
+    </script>
+</body>
+</html>
