@@ -10,12 +10,13 @@ body {
         rgba(4, 57, 120, 0.82), 
         rgba(4, 57, 120, 0.82)
     ), 
-    /* PERBAIKAN: Keluar folder assets (../) lalu masuk ke folder admin/img/ */
-    url('../admin/img/tambang.png'); 
+    url('assets/img/tambang.png'); 
     background-size: cover;
-    background-position: center;
+    background-position: center center;
     background-repeat: no-repeat;
-    background-attachment: fixed; /* Efek Parallax */
+    
+    /* PERBAIKAN: Ubah dari fixed menjadi scroll agar gambar mengunci pas di dalam kotak biru */
+    background-attachment: scroll; 
 }
 
 /* Animasi Muncul */

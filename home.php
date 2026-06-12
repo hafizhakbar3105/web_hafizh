@@ -16,14 +16,14 @@
             <img src="assets/img/NGS.png" alt="Logo" class="h-10 md:h-16 w-auto">
         </div>
         <div class="hidden md:flex gap-8 font-semibold text-[#043978]">
-            <a href="#home" class="hover:text-[#5AAC41] transition-colors">Home</a>
-            <a href="pages/produk.html" class="hover:text-[#5AAC41] transition-colors">Produk</a>
+            <a href="home.php" class="hover:text-[#5AAC41] transition-colors text-[#5AAC41]">Home</a>
+            <a href="produk.php" class="hover:text-[#5AAC41] transition-colors">Produk</a>
             <a href="#rental" class="hover:text-[#5AAC41] transition-colors">Rental</a>
             <a href="#kalibrasi" class="hover:text-[#5AAC41] transition-colors">Kalibrasi</a>
-            <a href="layanan.html" class="hover:text-[#5AAC41] transition-colors">Tentang Kami</a>
+            <a href="layanan.php" class="hover:text-[#5AAC41] transition-colors">Tentang Kami</a>
         </div>
         <div class="flex items-center gap-4">
-            <a href="layanan.html" class="bg-[#043978] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#195994] transition shadow-md">
+            <a href="pages/layanan.php" class="bg-[#043978] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#195994] transition shadow-md">
                 <i class="fas fa-phone-alt text-xs"></i> Hubungi Kami
             </a>
             <button id="mobile-menu-btn" class="md:hidden text-[#043978] text-2xl focus:outline-none">
@@ -34,10 +34,10 @@
 
     <div id="mobile-menu" class="fixed inset-0 bg-[#043978] z-[60] flex flex-col items-center justify-center gap-8 text-white text-2xl font-bold translate-x-full transition-transform duration-300">
         <button id="close-menu" class="absolute top-8 right-8 text-3xl">&times;</button>
-        <a href="#home" class="mobile-link">Home</a>
-        <a href="#produk" class="mobile-link">Produk</a>
+        <a href="index.php" class="mobile-link">Home</a>
+        <a href="pages/produk.php" class="mobile-link">Produk</a>
         <a href="#rental" class="mobile-link">Rental</a>
-        <a href="#tentang" class="mobile-link">Tentang Kami</a>
+        <a href="pages/layanan.php" class="mobile-link">Tentang Kami</a>
     </div>
 
     <section id="home" class="hero-bg h-[650px] flex items-center px-6 md:px-12 text-white overflow-hidden relative">
@@ -56,7 +56,7 @@
                 </p>
                 
                 <div class="flex flex-wrap gap-5">
-                    <a href="produk.html" class="bg-[#5AAC41] hover:bg-[#4d9437] px-10 py-4 rounded-lg font-bold flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl shadow-green-900/20 text-white">
+                    <a href="pages/produk.php" class="bg-[#5AAC41] hover:bg-[#4d9437] px-10 py-4 rounded-lg font-bold flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl shadow-green-900/20 text-white">
                         Jelajahi Produk <i class="fas fa-arrow-right text-sm"></i>
                     </a>
                     <button onclick="openVideoModal()" class="border-2 border-white/60 hover:border-white hover:bg-white hover:text-[#043978] px-10 py-4 rounded-lg font-bold transition-all transform hover:scale-105 flex items-center gap-2">
@@ -67,7 +67,7 @@
         </div>
     </section>
 
-    <section class="py-20 px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
+    <section id="rental" class="py-20 px-6 md:px-12 grid grid-cols-1 md:grid-cols-3 gap-12 max-w-7xl mx-auto">
         <div class="border-l-4 border-[#043978] pl-6 group reveal">
             <div class="w-12 h-12 bg-[#043978] text-white rounded-lg flex items-center justify-center mb-6 transition-all group-hover:bg-[#5AAC41] group-hover:rotate-12 shadow-lg">
                 <i class="fas fa-box text-xl"></i>
@@ -75,7 +75,7 @@
             <h3 class="text-2xl font-bold mb-3 text-[#043978]">Rental</h3>
             <p class="text-slate-500 leading-relaxed">Dukung efisiensi proyek Anda dengan armada alat survey terbaru yang selalu terkalibrasi harian.</p>
         </div>
-        <div class="border-l-4 border-[#043978] pl-6 group reveal">
+        <div id="kalibrasi" class="border-l-4 border-[#043978] pl-6 group reveal">
             <div class="w-12 h-12 bg-[#043978] text-white rounded-lg flex items-center justify-center mb-6 transition-all group-hover:bg-[#5AAC41] group-hover:rotate-12 shadow-lg">
                 <i class="fas fa-cog text-xl"></i>
             </div>
@@ -133,7 +133,7 @@
                         <span class="absolute top-3 left-3 bg-black text-white text-[8px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase">
                             IMU Tilt
                         </span>
-                        <img src="assets/img/gnss-smart-full-antennas-chcnav-i93.png" alt="CHCNAV I73" class="max-h-48 object-contain" onerror="this.src='admin/img/Topcon_GM100_c.png'">
+                        <img src="assets/img/gnss-smart-full-antennas-chcnav-i93.png" alt="CHCNAV I73" class="max-h-48 object-contain" onerror="this.src='assets/img/Topcon_GM100_c.png'">
                     </div>
                     <div class="space-y-2">
                         <span class="text-[9px] font-bold text-[#5AAC41] tracking-widest uppercase">CHCNAV</span>
@@ -266,7 +266,7 @@
                 </div>
                 
                 <h5 class="font-bold mb-4 uppercase tracking-widest text-sm text-[#5AAC41]">Internal System</h5>
-                <a href="admin/admin.php" class="inline-flex items-center gap-2 text-xs bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-500 px-4 py-2.5 rounded-lg text-slate-300 hover:text-white transition-all font-semibold tracking-wider">
+                <a href="admin/login.php" class="inline-flex items-center gap-2 text-xs bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-500 px-4 py-2.5 rounded-lg text-slate-300 hover:text-white transition-all font-semibold tracking-wider">
                     <i class="fas fa-lock text-xs"></i> PANEL LOGIN ADMIN
                 </a>
             </div>
