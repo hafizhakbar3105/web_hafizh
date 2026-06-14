@@ -103,7 +103,7 @@ if (isset($_POST['login'])) {
         </form>
 
         <div class="text-center mt-8 pt-6 border-t border-slate-50">
-            <a href="../index.php" class="text-xs font-bold text-slate-400 hover:text-[#043978] transition flex items-center justify-center gap-2">
+            <a href="../home.php" class="text-xs font-bold text-slate-400 hover:text-[#043978] transition flex items-center justify-center gap-2">
                 <i class="fas fa-arrow-left text-[10px]"></i> Kembali ke Landing Page
             </a>
         </div>

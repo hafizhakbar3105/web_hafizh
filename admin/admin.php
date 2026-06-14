@@ -10,6 +10,10 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 include 'koneksi.php';
 /** @var mysqli $conn */ 
 
+// Ambil pesan dari session jika ada, lalu hapus session-nya agar tidak muncul terus-menerus
+$msg_status = $_SESSION['success_msg'] ?? "";
+unset($_SESSION['success_msg']);
+
 // --- 2. LOGIKA HAPUS PRODUK ---
 if (isset($_GET['hapus'])) {
     $id_hapus = mysqli_real_escape_string($conn, $_GET['hapus']);
@@ -22,7 +26,9 @@ if (isset($_GET['hapus'])) {
         if ($nama_file && file_exists("../assets/img/" . $nama_file)) {
             unlink("../assets/img/" . $nama_file);
         }
-        echo "<script>alert('Sistem: Unit berhasil dihapus!'); window.location='admin.php';</script>";
+        $_SESSION['success_msg'] = "Unit instrumen berhasil dihapus!";
+        header("Location: admin.php");
+        exit;
     }
 }
 
@@ -34,7 +40,9 @@ if (isset($_POST['tambah_kategori_baru'])) {
         $cek_kategori = mysqli_query($conn, "SELECT * FROM kategori WHERE nama_kategori = '$kategori_baru'");
         if (mysqli_num_rows($cek_kategori) == 0) {
             mysqli_query($conn, "INSERT INTO kategori (nama_kategori) VALUES ('$kategori_baru')");
-            echo "<script>alert('Sistem: Kategori baru berhasil ditambahkan!'); window.location='admin.php';</script>";
+            $_SESSION['success_msg'] = "Kategori baru berhasil ditambahkan!";
+            header("Location: admin.php");
+            exit;
         } else {
             echo "<script>alert('Sistem: Kategori sudah terdaftar!');</script>";
         }
@@ -51,7 +59,9 @@ if (isset($_POST['tambah_produk'])) {
     
     if (mysqli_query($conn, "INSERT INTO produk (nama_produk, kategori, deskripsi, harga, gambar) VALUES ('$nama', '$kategori', '$deskripsi', '$harga', '$gambar')")) {
         move_uploaded_file($_FILES['gambar']['tmp_name'], "../assets/img/" . $gambar);
-        echo "<script>alert('Sistem: Registrasi Berhasil!'); window.location='admin.php';</script>";
+        $_SESSION['success_msg'] = "Produk berhasil ditambahkan!";
+        header("Location: admin.php");
+        exit;
     }
 }
 
@@ -72,7 +82,9 @@ if (isset($_POST['update_produk'])) {
     }
 
     if (mysqli_query($conn, $sql)) {
-        echo "<script>alert('Sistem: Data diperbarui!'); window.location='admin.php';</script>";
+        $_SESSION['success_msg'] = "Data produk diperbarui!";
+        header("Location: admin.php");
+        exit;
     }
 }
 
@@ -81,12 +93,15 @@ if (isset($_POST['update_layanan'])) {
     $id_layanan_edit = mysqli_real_escape_string($conn, $_POST['id_layanan']);
     $nama_l          = mysqli_real_escape_string($conn, $_POST['nama_layanan']);
     $email_l         = mysqli_real_escape_string($conn, $_POST['email_layanan']);
+    $telepon_l       = mysqli_real_escape_string($conn, $_POST['telepon_layanan']);
     $kategori_l      = mysqli_real_escape_string($conn, $_POST['kategori_layanan']);
     $pesan_l         = mysqli_real_escape_string($conn, $_POST['pesan_layanan']);
 
-    $sql_l = "UPDATE layanan SET nama='$nama_l', email='$email_l', kategori='$kategori_l', pesan='$pesan_l' WHERE id='$id_layanan_edit'";
+    $sql_l = "UPDATE layanan SET nama='$nama_l', email='$email_l', telepon='$telepon_l', kategori='$kategori_l', pesan='$pesan_l' WHERE id='$id_layanan_edit'";
     if (mysqli_query($conn, $sql_l)) {
-        echo "<script>alert('Sistem: Data permintaan layanan berhasil diperbarui!'); window.location='admin.php';</script>";
+        $_SESSION['success_msg'] = "Data layanan diperbarui!";
+        header("Location: admin.php");
+        exit;
     }
 }
 
@@ -94,13 +109,18 @@ if (isset($_POST['update_layanan'])) {
 if (isset($_GET['hapus_layanan'])) {
     $id_layanan_hapus = mysqli_real_escape_string($conn, $_GET['hapus_layanan']);
     if (mysqli_query($conn, "DELETE FROM layanan WHERE id = '$id_layanan_hapus'")) {
-        echo "<script>alert('Sistem: Data permintaan layanan berhasil dihapus!'); window.location='admin.php';</script>";
+        $_SESSION['success_msg'] = "Data ulasan berhasil dihapus!";
+        header("Location: admin.php");
+        exit;
     }
 }
 
 // --- 8. LOGIKA LAPORAN INVENTORY ---
 $data_inventory = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM produk"));
 $total_unit = $data_inventory['total'] ?? 0;
+
+$data_layanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM layanan"));
+$total_layanan = $data_layanan['total'] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -108,208 +128,234 @@ $total_unit = $data_inventory['total'] ?? 0;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NGS Core | Admin Dashboard</title>
+    <title>Dashboard Admin | Nusa Geospatial Solutions</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
     
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .dataTables_wrapper { padding: 1rem; }
-        table.dataTable thead th, table.dataTable thead td { border-bottom: 1px solid #f1f5f9; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        
+        /* FIX DAN PERBAIKAN ERROR JALUR CSS (Gambar Ke-4) */
+        .dataTables_wrapper { padding: 1.5rem; background: white; border-radius: 1.5rem; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        table.dataTable { border-collapse: collapse !important; width: 100% !important; margin: 1rem 0 !important; }
+        table.dataTable thead th { background-color: #f8fafc; color: #64748b !important; font-weight: 700 !important; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; padding: 1rem !important; border-bottom: 1px solid #e2e8f0 !important; }
+        table.dataTable tbody td { padding: 1rem !important; border-bottom: 1px solid #f1f5f9 !important; font-size: 13px; color: #334155; }
         table.dataTable.no-footer { border-bottom: none; }
         
         .dt-buttons .dt-button {
-            background-color: #043978 !important;
+            background: #043978 !important;
             color: white !important;
             border: none !important;
-            border-radius: 0.5rem !important;
+            border-radius: 0.75rem !important;
             font-weight: 700 !important;
-            font-size: 0.75rem !important;
-            padding: 0.5rem 1rem !important;
-            transition: all 0.3s ease;
+            font-size: 11px !important;
+            padding: 0.5rem 1.2rem !important;
+            transition: all 0.2s ease;
         }
-        .dt-buttons .dt-button:hover { background-color: #5AAC41 !important; color: white !important;}
-        
+        .dt-buttons .dt-button:hover { background: #5AAC41 !important; }
         .dataTables_filter input {
             background-color: #f1f5f9;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0.4rem 0.8rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.75rem;
+            padding: 0.5rem 1rem;
             outline: none;
-            font-size: 0.875rem;
+            font-size: 13px;
+            transition: all 0.2s;
         }
+        .dataTables_filter input:focus { border-color: #5AAC41; background-color: white; }
     </style>
 </head>
-<body class="flex min-h-screen">
+<body class="bg-[#f8fafc] flex flex-col min-h-screen">
 
-    <aside class="w-64 bg-[#043978] text-white flex flex-col fixed h-full z-50">
-        <div class="p-8 border-b border-white/10">
-            <h1 class="font-black text-xl tracking-tighter">NGS <span class="text-[#5AAC41]">CORE</span></h1>
-            <p class="text-[10px] text-blue-300 uppercase font-bold tracking-widest mt-1">Admin Panel v2</p>
+    <nav class="w-full bg-white border-b border-slate-100 px-6 md:px-12 py-4 flex items-center justify-between sticky top-0 z-50 shadow-sm">
+        <div class="flex items-center gap-2">
+            <img src="../assets/img/NGS.png" alt="Logo" class="h-10 w-auto">
+            <div class="h-6 w-[1px] bg-slate-200 mx-2 hidden sm:block"></div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-widest hidden sm:block">Control Panel</span>
         </div>
-        <nav class="flex-1 p-6 space-y-3">
-            <a href="admin.php" class="flex items-center gap-4 py-3 px-4 rounded-xl bg-[#5AAC41] text-white font-bold shadow-lg">
-                <i class="fas fa-th-large"></i> Dashboard Admin
-            </a>
-            <a href="../produk.php" class="flex items-center gap-4 py-3 px-4 text-white/50 hover:text-white transition font-semibold">
-                <i class="fas fa-external-link-alt text-xs"></i> Lihat Katalog Publik
-            </a>
-            <a href="../home.php" class="flex items-center gap-4 py-3 px-4 text-white/50 hover:text-white transition font-semibold">
-                <i class="fas fa-home text-xs"></i> Buka Landing Page
-            </a>
-        </nav>
-        <div class="p-6 border-t border-white/10">
-            <a href="logout.php" onclick="return confirm('Apakah Anda yakin ingin keluar dari panel admin?')" class="flex items-center gap-4 py-3 px-4 rounded-xl bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white transition font-bold text-sm">
-                <i class="fas fa-sign-out-alt"></i> LOGOUT SISTEM
-            </a>
-        </div>
-    </aside>
-
-    <main class="flex-1 ml-64 p-10">
         
-        <header class="flex justify-between items-center mb-10">
+        <div class="flex items-center gap-6 text-xs font-bold text-slate-500">
+            <a href="admin.php" class="text-[#043978] border-b-2 border-[#043978] pb-1">DASHBOARD ADMIN</a>
+            <a href="../produk.php" target="_blank" class="hover:text-[#5AAC41] transition">KELOLA KATALOG</a>
+            <a href="../home.php" target="_blank" class="hover:text-[#5AAC41] transition">LIHAT SITUS</a>
+        </div>
+        
+        <div>
+            <a href="logout.php" onclick="return confirm('Apakah Anda yakin ingin keluar?')" class="border border-red-200 text-red-500 hover:bg-red-50 hover:text-red-600 px-4 py-2 rounded-xl font-bold text-xs uppercase tracking-wider transition flex items-center gap-2 shadow-sm">
+                <i class="fas fa-power-off text-[10px]"></i> Logout
+            </a>
+        </div>
+    </nav>
+
+    <main class="max-w-7xl w-full mx-auto px-6 md:px-12 py-10 flex-grow">
+        
+        <div class="bg-gradient-to-br from-[#043978] to-[#14478a] rounded-3xl p-8 md:p-10 text-white shadow-xl mb-12 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none"></div>
             <div>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">DATABASE INSTRUMEN</h2>
-                <p class="text-sm text-slate-400 font-medium">Sistem manajemen inventaris katalog website (Total: <?php echo $total_unit; ?> Unit).</p>
+                <span class="text-[9px] font-black uppercase tracking-widest bg-white/15 px-3 py-1 rounded-full text-yellow-300 border border-white/10">Administrator Portal</span>
+                <h2 class="text-2xl md:text-3xl font-black tracking-tight mt-3 uppercase">Selamat Datang, Admin</h2>
+                <p class="text-xs text-blue-100/80 mt-2 max-w-xl font-medium leading-relaxed">Anda memiliki akses penuh untuk mengelola konten halaman beranda. Pastikan data yang dimasukkan akurat dan sesuai dengan standar perusahaan.</p>
             </div>
-            <div class="flex gap-4">
-                <button onclick="document.getElementById('modal-kategori').classList.remove('hidden')" class="bg-white text-[#043978] border-2 border-[#043978] px-6 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-slate-50 transition shadow-md">
-                    <i class="fas fa-folder-plus mr-2"></i> + Kategori Baru
-                </button>
-                <button onclick="document.getElementById('modal-tambah').classList.remove('hidden')" class="bg-[#5AAC41] text-white px-6 py-3 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-[#4d9437] transition shadow-xl">
-                    <i class="fas fa-plus mr-2"></i> + Tambah Alat Baru
-                </button>
-            </div>
-        </header>
-
-        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative mb-14">
-            <div class="absolute top-0 left-0 w-2 h-full bg-[#5AAC41]"></div>
             
-            <div class="p-6 overflow-x-auto">
-                <table id="laporanTable" class="w-full text-left display" style="width:100%">
-                    <thead class="bg-slate-50">
-                        <tr>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">No</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Gambar</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nama Produk</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Kategori</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Harga</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <?php
-                        $no = 1;
-                        $res = mysqli_query($conn, "SELECT * FROM produk ORDER BY id DESC");
-                        while($row = mysqli_fetch_assoc($res)) {
-                        ?>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-6 py-4 font-bold text-sm text-slate-400 text-center"><?php echo $no++; ?></td>
-                            <td class="px-6 py-4">
-                                <img src="../assets/img/<?php echo $row['gambar']; ?>" class="w-12 h-12 rounded-xl object-cover bg-slate-100 p-1" onerror="this.src='../assets/img/Topcon_GM100_c.png'">
-                            </td>
-                            <td class="px-6 py-4 font-bold text-slate-800 text-sm uppercase">
-                                <?php echo htmlspecialchars($row['nama_produk']); ?>
-                            </td>
-                            <td class="px-6 py-4">
-                                <span class="text-[9px] font-black text-[#043978] bg-blue-50 px-3 py-1 rounded-lg uppercase"><?php echo htmlspecialchars($row['kategori']); ?></span>
-                            </td>
-                            <td class="px-6 py-4 text-xs font-bold text-[#5AAC41]">
-                                Rp <?php echo number_format($row['harga'], 0, ',', '.'); ?>
-                            </td>
-                            <td class="px-6 py-4 flex justify-center items-center gap-2">
-                                <button onclick='bukaEdit(<?php echo json_encode($row); ?>)' class="w-8 h-8 rounded-lg bg-slate-100 text-slate-400 hover:bg-[#043978] hover:text-white transition flex items-center justify-center">
-                                    <i class="fas fa-edit text-xs"></i>
-                                </button>
-                                <a href="admin.php?hapus=<?php echo $row['id']; ?>" onclick="return confirm('Yakin hapus unit ini?')" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-400 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
-                                    <i class="fas fa-trash text-xs"></i>
-                                </a>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+            <div class="flex gap-4 w-full md:w-auto">
+                <div class="bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 text-center flex-1 md:flex-none min-w-[100px]">
+                    <h4 class="text-2xl font-black text-white"><?= $total_unit; ?></h4>
+                    <p class="text-[9px] font-bold text-blue-200 uppercase tracking-wider mt-1">Total Produk</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md px-6 py-4 rounded-2xl border border-white/10 text-center flex-1 md:flex-none min-w-[100px]">
+                    <h4 class="text-2xl font-black text-white"><?= $total_layanan; ?></h4>
+                    <p class="text-[9px] font-bold text-blue-200 uppercase tracking-wider mt-1">Ulasan Aktif</p>
+                </div>
             </div>
         </div>
 
-        <div class="mt-16 mb-5">
-            <h2 class="text-2xl font-black text-slate-800 tracking-tight">PERMINTAAN LAYANAN & KONTRAK</h2>
-            <p class="text-sm text-slate-400 font-medium">Daftar masuk formulir pemohon beserta lampiran verifikasi tanda tangan digital.</p>
+        <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-4">
+            <div>
+                <h3 class="text-base font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
+                    <div class="w-1.5 h-4 bg-[#043978] rounded-full"></div> KELOLA <span class="text-[#195994] font-light italic">PRODUK UTAMA</span>
+                </h3>
+                <p class="text-[11px] text-slate-400 font-semibold mt-1">Menampilkan 3 produk unggulan di halaman beranda publik.</p>
+            </div>
+            <div>
+                <button onclick="document.getElementById('modal-tambah').classList.remove('hidden')" class="bg-[#043978] hover:bg-[#5AAC41] text-white px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
+                    <i class="fas fa-plus text-[10px]"></i> Tambah Alat Baru
+                </button>
+            </div>
         </div>
 
-        <div class="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden relative mb-10">
-            <div class="absolute top-0 left-0 w-2 h-full bg-[#043978]"></div>
-            
-            <div class="p-6 overflow-x-auto">
-                <table id="layananTable" class="w-full text-left display" style="width:100%">
-                    <thead class="bg-slate-50">
-                        <tr>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">No</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Nama Pemohon</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Email</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Kategori</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Pesan</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Validasi TTD</th>
-                            <th class="px-6 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-center">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-100">
-                        <?php
-                        $no_l = 1;
-                        $res_l = mysqli_query($conn, "SELECT * FROM layanan ORDER BY id DESC");
-                        while($row_l = mysqli_fetch_assoc($res_l)) {
-                        ?>
-                        <tr class="hover:bg-slate-50 transition">
-                            <td class="px-6 py-4 font-bold text-sm text-slate-400 text-center"><?php echo $no_l++; ?></td>
-                            <td class="px-6 py-4 font-bold text-slate-800 text-sm uppercase"><?php echo htmlspecialchars($row_l['nama']); ?></td>
-                            <td class="px-6 py-4 text-xs font-semibold text-slate-600"><?php echo htmlspecialchars($row_l['email']); ?></td>
-                            <td class="px-6 py-4">
-                                <span class="text-[9px] font-black text-[#5AAC41] bg-green-50 px-3 py-1 rounded-lg uppercase"><?php echo htmlspecialchars($row_l['kategori']); ?></span>
-                            </td>
-                            <td class="px-6 py-4 text-xs text-slate-500 max-w-xs truncate"><?php echo htmlspecialchars($row_l['pesan']); ?></td>
-                            <td class="px-6 py-4 flex justify-center">
-                                <img src="<?php echo $row_l['ttd_data']; ?>" class="h-12 w-auto bg-slate-50 border border-slate-100 rounded-lg p-1 object-contain" alt="Tanda Tangan Klien">
-                            </td>
-                            <td class="px-6 py-4 flex justify-center items-center gap-2">
-                                <button onclick='bukaEditLayanan(<?php echo json_encode($row_l); ?>)' class="w-8 h-8 rounded-lg bg-slate-100 text-slate-400 hover:bg-[#043978] hover:text-white transition flex items-center justify-center">
-                                    <i class="fas fa-edit text-xs"></i>
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden mb-14 p-2">
+            <table id="laporanTable" class="w-full text-left display">
+                <thead>
+                    <tr>
+                        <th class="text-center w-12">No</th>
+                        <th>Gambar</th>
+                        <th>Nama Produk</th>
+                        <th>Kategori</th>
+                        <th>Harga</th>
+                        <th class="text-center w-24">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <?php
+                    $no = 1;
+                    $res = mysqli_query($conn, "SELECT * FROM produk ORDER BY id DESC");
+                    while($row = mysqli_fetch_assoc($res)) {
+                    ?>
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="text-center font-bold text-slate-400 text-xs"><?= $no++; ?></td>
+                        <td>
+                            <img src="../assets/img/<?= $row['gambar']; ?>" class="w-10 h-10 rounded-xl object-cover bg-slate-50 border border-slate-100 p-1" onerror="this.src='../assets/img/Topcon_GM100_c.png'">
+                        </td>
+                        <td class="font-bold text-slate-700 uppercase tracking-tight text-xs"><?= htmlspecialchars($row['nama_produk']); ?></td>
+                        <td>
+                            <span class="text-[8px] font-black text-[#043978] bg-blue-50 px-2.5 py-1 rounded-md uppercase tracking-wider border border-blue-100/50"><?= htmlspecialchars($row['kategori']); ?></span>
+                        </td>
+                        <td class="font-extrabold text-[#5AAC41] text-xs">Rp <?= number_format($row['harga'], 0, ',', '.'); ?></td>
+                        <td>
+                            <div class="flex justify-center items-center gap-1.5">
+                                <button onclick='bukaEdit(<?= json_encode($row); ?>)' class="w-7 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:bg-[#043978] hover:text-white hover:border-transparent transition flex items-center justify-center">
+                                    <i class="fas fa-edit text-[10px]"></i>
                                 </button>
-                                <a href="admin.php?hapus_layanan=<?php echo $row_l['id']; ?>" onclick="return confirm('Yakin hapus data berkas permintaan layanan ini?')" class="w-8 h-8 rounded-lg bg-slate-100 text-slate-400 hover:bg-red-500 hover:text-white transition flex items-center justify-center">
-                                    <i class="fas fa-trash text-xs"></i>
+                                <a href="admin.php?hapus=<?= $row['id']; ?>" onclick="return confirm('Yakin hapus unit ini?')" class="w-7 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:bg-red-500 hover:text-white hover:border-transparent transition flex items-center justify-center">
+                                    <i class="fas fa-trash text-[10px]"></i>
                                 </a>
-                            </td>
-                        </tr>
-                        <?php } ?>
-                    </tbody>
-                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between sm:items-end mb-6 gap-4">
+            <div>
+                <h3 class="text-base font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
+                    <div class="w-1.5 h-4 bg-[#5AAC41] rounded-full"></div> KELOLA <span class="text-[#5AAC41] font-light italic">INSIGHT & LAYANAN</span>
+                </h3>
+                <p class="text-[11px] text-slate-400 font-semibold mt-1">Dokumentasi kegiatan lapangan dan publikasi ulasan artikel teknis.</p>
             </div>
+            <div>
+                <button onclick="document.getElementById('modal-kategori').classList.remove('hidden')" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-sm flex items-center gap-2">
+                    <i class="fas fa-folder-plus text-[10px] text-[#043978]"></i> + Kategori Baru
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden p-2">
+            <table id="layananTable" class="w-full text-left display">
+                <thead>
+                    <tr>
+                        <th class="text-center w-12">No</th>
+                        <th>Nama Pemohon</th>
+                        <th>Email</th>
+                        <th>No. Telepon</th>
+                        <th>Kategori</th>
+                        <th>Pesan</th>
+                        <th class="text-center">Validasi TTD</th>
+                        <th class="text-center w-24">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                    <?php
+                    $no_l = 1;
+                    $res_l = mysqli_query($conn, "SELECT * FROM layanan ORDER BY id DESC");
+                    while($row_l = mysqli_fetch_assoc($res_l)) {
+                    ?>
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="text-center font-bold text-slate-400 text-xs"><?= $no_l++; ?></td>
+                        <td class="font-bold text-slate-700 text-xs uppercase tracking-tight"><?= htmlspecialchars($row_l['nama']); ?></td>
+                        <td class="font-medium text-slate-500 text-xs"><?= htmlspecialchars($row_l['email']); ?></td>
+                        <td class="font-bold text-slate-600 text-xs"><?= htmlspecialchars($row_l['telepon'] ?? '-'); ?></td>
+                        <td>
+                            <span class="text-[8px] font-black text-[#5AAC41] bg-green-50 px-2.5 py-1 rounded-md uppercase tracking-wider border border-green-100/50"><?= htmlspecialchars($row_l['kategori']); ?></span>
+                        </td>
+                        <td class="text-xs text-slate-400 max-w-xs truncate"><?= htmlspecialchars($row_l['pesan']); ?></td>
+                        <td>
+                            <div class="flex justify-center">
+                                <img src="<?= $row_l['ttd_data']; ?>" class="h-10 w-auto bg-slate-50 border border-slate-100 rounded-lg p-1 object-contain" alt="TTD">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex justify-center items-center gap-1.5">
+                                <button onclick='bukaEditLayanan(<?= json_encode($row_l); ?>)' class="w-7 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:bg-[#043978] hover:text-white hover:border-transparent transition flex items-center justify-center">
+                                    <i class="fas fa-edit text-[10px]"></i>
+                                </button>
+                                <a href="admin.php?hapus_layanan=<?= $row_l['id']; ?>" onclick="return confirm('Yakin hapus data ini?')" class="w-7 h-8 rounded-lg bg-slate-50 border border-slate-200 text-slate-400 hover:bg-red-500 hover:text-white hover:border-transparent transition flex items-center justify-center">
+                                    <i class="fas fa-trash text-[10px]"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
         </div>
     </main>
 
     <div id="modal-kategori" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
-        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-10 relative">
-            <button onclick="document.getElementById('modal-kategori').classList.add('hidden')" class="absolute top-8 right-8 text-slate-300 hover:text-red-500"><i class="fas fa-times-circle text-2xl"></i></button>
-            <h2 class="text-2xl font-black text-slate-800 mb-2">Kategori Baru</h2>
-            <p class="text-xs text-slate-400 mb-6">Tambahkan klasifikasi instrumen baru ke database internal panel NGS Core.</p>
+        <div class="bg-white w-full max-w-md rounded-[2rem] p-8 relative mx-4">
+            <button onclick="document.getElementById('modal-kategori').classList.add('hidden')" class="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition"><i class="fas fa-times-circle text-xl"></i></button>
+            <h2 class="text-xl font-black text-slate-800 mb-1">Kategori Baru</h2>
+            <p class="text-xs text-slate-400 mb-5">Tambahkan klasifikasi instrumen baru ke database.</p>
             <form action="" method="POST" class="space-y-4">
-                <input type="text" name="nama_kategori_baru" placeholder="Contoh: GNSS RTK, Aksesoris Alat" required class="w-full px-5 py-4 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-sm focus:ring-2 focus:ring-[#5AAC41] focus:bg-white transition">
-                <button type="submit" name="tambah_kategori_baru" class="w-full bg-[#043978] text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-blue-900/20 hover:bg-[#5AAC41] transition">Simpan Kategori</button>
+                <input type="text" name="nama_kategori_baru" placeholder="Contoh: GNSS RTK, Aksesoris Alat" required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41] focus:bg-white transition">
+                <button type="submit" name="tambah_kategori_baru" class="w-full bg-[#043978] hover:bg-[#5AAC41] text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] transition shadow-md">Simpan Kategori</button>
             </form>
         </div>
     </div>
 
     <div id="modal-tambah" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
-        <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-10 relative">
-            <button onclick="document.getElementById('modal-tambah').classList.add('hidden')" class="absolute top-8 right-8 text-slate-300 hover:text-red-500"><i class="fas fa-times-circle text-2xl"></i></button>
-            <h2 class="text-2xl font-black text-slate-800 mb-6">Registrasi Alat Baru</h2>
+        <div class="bg-white w-full max-w-lg rounded-[2rem] p-8 relative mx-4 max-h-[90vh] overflow-y-auto">
+            <button onclick="document.getElementById('modal-tambah').classList.add('hidden')" class="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition"><i class="fas fa-times-circle text-xl"></i></button>
+            <h2 class="text-xl font-black text-slate-800 mb-5">Registrasi Alat Baru</h2>
             <form action="" method="POST" enctype="multipart/form-data" class="space-y-4">
-                <input type="text" name="nama_produk" placeholder="Nama Produk Instrumen" required class="w-full px-5 py-3 rounded-xl bg-slate-50 border-none outline-none font-semibold text-sm focus:ring-2 focus:ring-[#5AAC41]">
-                <select name="kategori" required class="w-full px-5 py-3 rounded-xl bg-slate-50 border-none outline-none font-semibold text-sm focus:ring-2 focus:ring-[#5AAC41]">
+                <input type="text" name="nama_produk" placeholder="Nama Produk Instrumen" required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41]">
+                <select name="kategori" required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41]">
                     <?php 
                     $get_kat = mysqli_query($conn, "SELECT * FROM kategori ORDER BY nama_kategori ASC");
                     while($k = mysqli_fetch_assoc($get_kat)) {
@@ -317,25 +363,25 @@ $total_unit = $data_inventory['total'] ?? 0;
                     }
                     ?>
                 </select>
-                <input type="number" name="harga" placeholder="Harga Jual / Sewa (IDR)" required class="w-full px-5 py-3 rounded-xl bg-slate-50 border-none outline-none font-semibold text-sm focus:ring-2 focus:ring-[#5AAC41]">
-                <textarea name="deskripsi" placeholder="Deskripsi Spesifikasi Teknis Alat..." required class="w-full px-5 py-3 rounded-xl bg-slate-50 border-none outline-none font-semibold text-sm h-24 focus:ring-2 focus:ring-[#5AAC41]"></textarea>
+                <input type="number" name="harga" placeholder="Harga Jual / Sewa (IDR)" required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41]">
+                <textarea name="deskripsi" placeholder="Deskripsi Spesifikasi Teknis Alat..." required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs h-24 focus:ring-2 focus:ring-[#5AAC41]"></textarea>
                 <div class="bg-slate-50 p-4 rounded-xl border border-dashed border-slate-200">
-                    <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">Upload Foto Gambar</label>
+                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Upload Foto Gambar</label>
                     <input type="file" name="gambar" required class="text-xs text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-blue-50 file:text-[#043978] hover:file:bg-blue-100">
                 </div>
-                <button type="submit" name="tambah_produk" class="w-full bg-[#5AAC41] text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg shadow-green-900/20 hover:bg-[#4d9437] transition">Simpan Unit Alat</button>
+                <button type="submit" name="tambah_produk" class="w-full bg-[#5AAC41] hover:bg-[#4d9437] text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] transition shadow-md">Simpan Unit Alat</button>
             </form>
         </div>
     </div>
 
     <div id="modal-edit" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
-        <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-10 relative">
-            <button onclick="document.getElementById('modal-edit').classList.add('hidden')" class="absolute top-8 right-8 text-slate-300 hover:text-red-500"><i class="fas fa-times-circle text-2xl"></i></button>
-            <h2 class="text-2xl font-black text-slate-800 mb-6 text-center">Update Unit</h2>
+        <div class="bg-white w-full max-w-lg rounded-[2rem] p-8 relative mx-4">
+            <button onclick="document.getElementById('modal-edit').classList.add('hidden')" class="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition"><i class="fas fa-times-circle text-xl"></i></button>
+            <h2 class="text-xl font-black text-slate-800 mb-5 text-center">Update Unit</h2>
             <form action="" method="POST" enctype="multipart/form-data" class="space-y-4">
                 <input type="hidden" name="id_produk" id="edit-id">
-                <input type="text" name="nama_produk" id="edit-nama" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-bold text-sm">
-                <select name="kategori" id="edit-kategori" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-bold text-sm">
+                <input type="text" name="nama_produk" id="edit-nama" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none focus:ring-2 focus:ring-[#5AAC41]">
+                <select name="kategori" id="edit-kategori" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none focus:ring-2 focus:ring-[#5AAC41]">
                     <?php 
                     $get_kat_edit = mysqli_query($conn, "SELECT * FROM kategori ORDER BY nama_kategori ASC");
                     while($ke = mysqli_fetch_assoc($get_kat_edit)) {
@@ -343,44 +389,46 @@ $total_unit = $data_inventory['total'] ?? 0;
                     }
                     ?>
                 </select>
-                <input type="number" name="harga" id="edit-harga" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-bold text-sm">
-                <textarea name="deskripsi" id="edit-deskripsi" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-medium text-sm h-24"></textarea>
+                <input type="number" name="harga" id="edit-harga" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none focus:ring-2 focus:ring-[#5AAC41]">
+                <textarea name="deskripsi" id="edit-deskripsi" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-medium text-xs h-24 border border-slate-100 outline-none focus:ring-2 focus:ring-[#5AAC41]"></textarea>
                 <p class="text-[10px] text-slate-400 font-bold italic">Biarkan kosong jika tidak ingin ganti foto gambar</p>
                 <input type="file" name="gambar" class="text-xs">
-                <button type="submit" name="update_produk" class="w-full bg-[#043978] text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg">Simpan Perubahan</button>
+                <button type="submit" name="update_produk" class="w-full bg-[#043978] text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] transition shadow-md">Simpan Perubahan</button>
             </form>
         </div>
     </div>
 
     <div id="modal-edit-layanan" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
-        <div class="bg-white w-full max-w-lg rounded-[2.5rem] p-10 relative">
-            <button onclick="document.getElementById('modal-edit-layanan').classList.add('hidden')" class="absolute top-8 right-8 text-slate-300 hover:text-red-500"><i class="fas fa-times-circle text-2xl"></i></button>
-            <h2 class="text-2xl font-black text-slate-800 mb-6 text-center">Edit Berkas Layanan Klien</h2>
+        <div class="bg-white w-full max-w-lg rounded-[2rem] p-8 relative mx-4">
+            <button onclick="document.getElementById('modal-edit-layanan').classList.add('hidden')" class="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition"><i class="fas fa-times-circle text-xl"></i></button>
+            <h2 class="text-xl font-black text-slate-800 mb-5 text-center">Edit Berkas Layanan Klien</h2>
             <form action="" method="POST" class="space-y-4">
                 <input type="hidden" name="id_layanan" id="edit-l-id">
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Nama Pemohon</label>
-                    <input type="text" name="nama_layanan" id="edit-l-nama" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#043978]">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Email Perusahaan</label>
-                    <input type="email" name="email_layanan" id="edit-l-email" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#043978]">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kategori Permintaan</label>
-                    <select name="kategori_layanan" id="edit-l-kategori" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#043978]">
-                        <option value="Pembelian Unit Baru">Pembelian Unit Baru</option>
-                        <option value="Rental Alat Survey">Rental Alat Survey</option>
-                        <option value="Kalibrasi & Service">Kalibrasi & Service</option>
-                        <option value="Konsultasi Proyek Topografi">Konsultasi Proyek Topografi</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Pesan Tambahan</label>
-                    <textarea name="pesan_layanan" id="edit-l-pesan" required class="w-full px-5 py-3 rounded-xl bg-slate-50 font-medium text-sm h-24 focus:outline-none focus:ring-2 focus:ring-[#043978]"></textarea>
-                </div>
-                <button type="submit" name="update_layanan" class="w-full bg-[#043978] text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs shadow-lg">Simpan Perubahan Berkas</button>
+                <input type="text" name="nama_layanan" id="edit-l-nama" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none">
+                <input type="email" name="email_layanan" id="edit-l-email" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none">
+                <input type="text" name="telepon_layanan" id="edit-l-telepon" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none">
+                <select name="kategori_layanan" id="edit-l-kategori" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none">
+                    <option value="Pembelian Unit Baru">Pembelian Unit Baru</option>
+                    <option value="Rental Alat Survey">Rental Alat Survey</option>
+                    <option value="Kalibrasi & Service">Kalibrasi & Service</option>
+                    <option value="Konsultasi Proyek Topografi">Konsultasi Proyek Topografi</option>
+                </select>
+                <textarea name="pesan_layanan" id="edit-l-pesan" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-medium text-xs h-24 border border-slate-100 outline-none"></textarea>
+                <button type="submit" name="update_layanan" class="w-full bg-[#043978] text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] transition shadow-md">Simpan Perubahan Berkas</button>
             </form>
+        </div>
+    </div>
+
+    <div id="custom-alert" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[200] flex items-center justify-center hidden transition-all duration-300">
+        <div class="bg-white max-w-sm w-full rounded-[2rem] p-8 text-center border border-slate-100 shadow-2xl transform scale-95 transition-all duration-300">
+            <div class="w-16 h-16 bg-green-50 text-[#5AAC41] rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h4 class="text-sm font-black text-slate-800 tracking-tight">Notifikasi Sistem</h4>
+            <p id="alert-text" class="text-xs text-slate-400 font-semibold mt-2 mb-6 leading-relaxed"></p>
+            <button onclick="tutupAlert()" class="w-full bg-[#043978] hover:bg-[#5AAC41] text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] transition shadow-lg">
+                Selesai & Muat Ulang
+            </button>
         </div>
     </div>
 
@@ -394,40 +442,47 @@ $total_unit = $data_inventory['total'] ?? 0;
 
     <script>
         $(document).ready(function() {
-            // 1. Inisialisasi DataTables Inventaris Alat
+            // 1. DataTables Master Alat
             $('#laporanTable').DataTable({
                 "dom": '<"flex justify-between items-center mb-4"<"flex gap-2"B><"flex items-center"f>>rt<"flex justify-between items-center mt-4"ip>',
                 "buttons": [
-                    {
-                        extend: 'pdfHtml5',
-                        text: '<i class="fas fa-file-pdf mr-1"></i> Export Data PDF',
-                        title: 'Laporan Rekapitulasi Data Base - NGS Core',
-                        exportOptions: { columns: [0, 2, 3, 4] }
-                    },
-                    {
-                        extend: 'excelHtml5',
-                        text: '<i class="fas fa-file-excel mr-1"></i> Export Excel',
-                        exportOptions: { columns: [0, 2, 3, 4] }
-                    }
+                    { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf mr-1"></i> PDF', title: 'Laporan Rekapitulasi Data Base - NGS Core', exportOptions: { columns: [0, 2, 3, 4] } },
+                    { extend: 'excelHtml5', text: '<i class="fas fa-file-excel mr-1"></i> Excel', exportOptions: { columns: [0, 2, 3, 4] } }
                 ],
-                "language": {
-                    "search": "",
-                    "searchPlaceholder": "Cari data alat...",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data"
-                }
+                "language": { "search": "", "searchPlaceholder": "Cari data alat...", "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data" }
             });
 
-            // 2. Inisialisasi DataTables Layanan Pelanggan & TTD Kontrak
+            // 2. DataTables Layanan Pelanggan
             $('#layananTable').DataTable({
-                "language": {
-                    "search": "",
-                    "searchPlaceholder": "Cari data pemohon...",
-                    "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data pemohon"
-                }
+                "dom": '<"flex justify-between items-center mb-4"<"flex gap-2"B><"flex items-center"f>>rt<"flex justify-between items-center mt-4"ip>',
+                "buttons": [
+                    { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf mr-1"></i> PDF', title: 'Laporan Permintaan Layanan & Kontrak - NGS Core', exportOptions: { columns: [0, 1, 2, 3, 4, 5] } },
+                    { extend: 'excelHtml5', text: '<i class="fas fa-file-excel mr-1"></i> Excel', title: 'Laporan Permintaan Layanan & Kontrak - NGS Core', exportOptions: { columns: [0, 1, 2, 3, 4, 5] } }
+                ],
+                "language": { "search": "", "searchPlaceholder": "Cari data pemohon...", "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data pemohon" }
             });
+
+            <?php if (!empty($msg_status)) : ?>
+                bukaAlert("<?php echo $msg_status; ?>");
+            <?php endif; ?>
         });
 
-        // Handler form modal edit alat
+        function bukaAlert(pesan) {
+            var audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2019/2019-84.wav');
+            audio.volume = 0.6; 
+            audio.play().catch(function(error) { console.log("Audio play diblokir oleh browser."); });
+
+            document.getElementById('alert-text').innerText = pesan;
+            const alertBox = document.getElementById('custom-alert');
+            alertBox.classList.remove('hidden');
+            setTimeout(() => {
+                alertBox.querySelector('div').classList.remove('scale-95');
+                alertBox.querySelector('div').classList.add('scale-100');
+            }, 50);
+        }
+
+        function tutupAlert() { window.location.href = 'admin.php'; }
+
         function bukaEdit(data) {
             document.getElementById('modal-edit').classList.remove('hidden');
             document.getElementById('edit-id').value = data.id;
@@ -437,12 +492,12 @@ $total_unit = $data_inventory['total'] ?? 0;
             document.getElementById('edit-deskripsi').value = data.deskripsi;
         }
 
-        // Handler form modal edit layanan
         function bukaEditLayanan(data) {
             document.getElementById('modal-edit-layanan').classList.remove('hidden');
             document.getElementById('edit-l-id').value = data.id;
             document.getElementById('edit-l-nama').value = data.nama;
             document.getElementById('edit-l-email').value = data.email;
+            document.getElementById('edit-l-telepon').value = data.telepon; 
             document.getElementById('edit-l-kategori').value = data.kategori;
             document.getElementById('edit-l-pesan').value = data.pesan;
         }

@@ -10,13 +10,12 @@ body {
         rgba(4, 57, 120, 0.82), 
         rgba(4, 57, 120, 0.82)
     ), 
+    /* PERBAIKAN TOTAL: Menggunakan ./ untuk menegaskan posisi folder img di sebelah file CSS */
     url('assets/img/tambang.png'); 
     background-size: cover;
     background-position: center center;
     background-repeat: no-repeat;
-    
-    /* PERBAIKAN: Ubah dari fixed menjadi scroll agar gambar mengunci pas di dalam kotak biru */
-    background-attachment: scroll; 
+    background-attachment: scroll;
 }
 
 /* Animasi Muncul */

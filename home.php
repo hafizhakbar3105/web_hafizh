@@ -8,6 +8,29 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
+    <style>
+        /* Pengaturan Khusus Video Background agar Responsif & Mengunci Element */
+        .video-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .video-container video {
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body class="bg-white text-slate-800">
 
@@ -18,12 +41,10 @@
         <div class="hidden md:flex gap-8 font-semibold text-[#043978]">
             <a href="home.php" class="hover:text-[#5AAC41] transition-colors text-[#5AAC41]">Home</a>
             <a href="produk.php" class="hover:text-[#5AAC41] transition-colors">Produk</a>
-            <a href="#rental" class="hover:text-[#5AAC41] transition-colors">Rental</a>
-            <a href="#kalibrasi" class="hover:text-[#5AAC41] transition-colors">Kalibrasi</a>
             <a href="layanan.php" class="hover:text-[#5AAC41] transition-colors">Tentang Kami</a>
         </div>
         <div class="flex items-center gap-4">
-            <a href="pages/layanan.php" class="bg-[#043978] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#195994] transition shadow-md">
+            <a href="layanan.php" class="bg-[#043978] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#195994] transition shadow-md">
                 <i class="fas fa-phone-alt text-xs"></i> Hubungi Kami
             </a>
             <button id="mobile-menu-btn" class="md:hidden text-[#043978] text-2xl focus:outline-none">
@@ -34,29 +55,39 @@
 
     <div id="mobile-menu" class="fixed inset-0 bg-[#043978] z-[60] flex flex-col items-center justify-center gap-8 text-white text-2xl font-bold translate-x-full transition-transform duration-300">
         <button id="close-menu" class="absolute top-8 right-8 text-3xl">&times;</button>
-        <a href="index.php" class="mobile-link">Home</a>
-        <a href="pages/produk.php" class="mobile-link">Produk</a>
+        <a href="home.php" class="mobile-link">Home</a>
+        <a href="produk.php" class="mobile-link">Produk</a>
         <a href="#rental" class="mobile-link">Rental</a>
-        <a href="pages/layanan.php" class="mobile-link">Tentang Kami</a>
+        <a href="layanan.php" class="mobile-link">Tentang Kami</a>
     </div>
 
-    <section id="home" class="hero-bg h-[650px] flex items-center px-6 md:px-12 text-white overflow-hidden relative">
-        <div class="container mx-auto">
-            <div class="max-w-4xl relative z-10 animate-fade-in-up">
+    <section id="home" class="h-[650px] flex items-center px-6 md:px-12 text-white overflow-hidden relative">
+        
+        <div class="video-container">
+            <video autoplay muted loop playsinline poster="assets/img/tambang.png">
+                <source src="assets/video/GNSS.mp4" type="video/mp4">
+                Browser Anda tidak mendukung pemutar video.
+            </video>
+        </div>
+
+        <div class="absolute inset-0 bg-[#043978]/85 mix-blend-multiply z-10"></div>
+
+        <div class="container mx-auto relative z-20">
+            <div class="max-w-4xl animate-fade-in-up">
                 <div class="w-14 h-1.5 bg-[#E7D532] mb-8 rounded-full"></div>
                 
-                <h1 class="text-5xl md:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
+                <h1 class="text-4xl md:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
                     Solusi Presisi untuk<br>
                     <span class="text-white">Masa Depan Geospatial</span>
                 </h1>
                 
-                <p class="text-lg md:text-xl mb-10 opacity-85 max-w-2xl leading-relaxed">
+                <p class="text-base md:text-xl mb-10 opacity-90 max-w-2xl leading-relaxed">
                     Penyedia layanan dan alat survey terintegrasi. Kami menghadirkan teknologi GNSS, 
                     Total Station, dan Drone terbaik untuk mendukung akurasi proyek infrastruktur Anda.
                 </p>
                 
                 <div class="flex flex-wrap gap-5">
-                    <a href="pages/produk.php" class="bg-[#5AAC41] hover:bg-[#4d9437] px-10 py-4 rounded-lg font-bold flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl shadow-green-900/20 text-white">
+                    <a href="produk.php" class="bg-[#5AAC41] hover:bg-[#4d9437] px-10 py-4 rounded-lg font-bold flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl shadow-green-900/20 text-white">
                         Jelajahi Produk <i class="fas fa-arrow-right text-sm"></i>
                     </a>
                     <button onclick="openVideoModal()" class="border-2 border-white/60 hover:border-white hover:bg-white hover:text-[#043978] px-10 py-4 rounded-lg font-bold transition-all transform hover:scale-105 flex items-center gap-2">
@@ -120,7 +151,7 @@
                 <p class="text-slate-400 mt-2 text-sm">Teknologi pemetaan presisi dari brand kelas dunia</p>
             </div>
             <div class="mt-4 md:mt-0">
-                <a href="admin/admin.php" class="text-xs font-bold text-[#043978] border-b-2 border-[#043978] pb-1 hover:text-[#5AAC41] hover:border-[#5AAC41] transition-all flex items-center gap-2 uppercase tracking-wider">
+                <a href="produk.php" class="text-xs font-bold text-[#043978] border-b-2 border-[#043978] pb-1 hover:text-[#5AAC41] hover:border-[#5AAC41] transition-all flex items-center gap-2 uppercase tracking-wider">
                     Lihat Semua Produk <i class="fas fa-arrow-right text-[10px]"></i>
                 </a>
             </div>
@@ -146,7 +177,7 @@
                     </div>
                 </div>
                 <div class="pt-6">
-                    <a href="admin/admin.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
+                    <a href="produk.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
                         Detail Produk <i class="fas fa-arrow-circle-right text-xs"></i>
                     </a>
                 </div>
@@ -171,7 +202,7 @@
                     </div>
                 </div>
                 <div class="pt-6">
-                    <a href="admin/admin.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
+                    <a href="produk.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
                         Detail Produk <i class="fas fa-arrow-circle-right text-xs"></i>
                     </a>
                 </div>
@@ -196,7 +227,7 @@
                     </div>
                 </div>
                 <div class="pt-6">
-                    <a href="admin/admin.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
+                    <a href="produk.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
                         Detail Produk <i class="fas fa-arrow-circle-right text-xs"></i>
                     </a>
                 </div>
@@ -209,9 +240,9 @@
             <h2 class="text-3xl md:text-5xl font-extrabold mb-6">Siap Memulai Proyek Anda?</h2>
             <p class="text-lg opacity-80 mb-10 max-w-xl mx-auto">Konsultasikan kebutuhan geospatial Anda sekarang dan dapatkan solusi terbaik dari tim ahli kami.</p>
             <div class="flex flex-wrap justify-center gap-5">
-                <button class="bg-[#5AAC41] text-white px-10 py-4 rounded-xl font-bold flex items-center gap-2 hover:bg-[#4d9437] transition shadow-lg transform hover:-translate-y-1">
+                <a href="layanan.php" class="bg-[#5AAC41] text-white px-10 py-4 rounded-xl font-bold flex items-center gap-2 hover:bg-[#4d9437] transition shadow-lg transform hover:-translate-y-1">
                     <i class="fas fa-phone-alt"></i> Hubungi Kami
-                </button>
+                </a>
                 <button class="border border-white/30 px-10 py-4 rounded-xl font-bold hover:bg-white hover:text-[#043978] transition transform hover:-translate-y-1">
                     Email Kami
                 </button>
@@ -229,7 +260,7 @@
                     Browser Anda tidak mendukung pemutar video.
                 </video>
             </div>
-            <audio id="clickSound" src="audio/click.mp3" preload="auto"></audio>
+            <audio id="clickSound" src="audio/click.mp3" preload="auto"></auto>
         </div>
     </div>
 
@@ -275,10 +306,6 @@
             © 2026 NUSA GEOSPATIAL SOLUTIONS.
         </div>
     </footer>
-
-    <a href="https://wa.me/6281234567890" target="_blank" class="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[100] border-4 border-white">
-        <i class="fab fa-whatsapp text-4xl text-white"></i>
-    </a>
 
     <script>
         const modal = document.getElementById('videoModal');

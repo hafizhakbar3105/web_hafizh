@@ -1,5 +1,5 @@
 <?php
-// 1. Hubungkan ke file koneksi. Karena file ini di dalam folder pages, kita keluar tingkat dulu (../)
+// 1. Hubungkan ke file koneksi. Karena file ini di dalam folder root, langsung panggil admin/koneksi.php
 include 'admin/koneksi.php';
 
 $notif_sukses = false;
@@ -8,12 +8,13 @@ $notif_sukses = false;
 if (isset($_POST['kirim_layanan'])) {
     $nama     = mysqli_real_escape_string($conn, $_POST['nama_lengkap']);
     $email    = mysqli_real_escape_string($conn, $_POST['email_perusahaan']);
+    $telepon  = mysqli_real_escape_string($conn, $_POST['no_telepon']);
     $kategori = mysqli_real_escape_string($conn, $_POST['kategori_permintaan']);
     $pesan    = mysqli_real_escape_string($conn, $_POST['pesan_tambahan']);
     $ttd_data = mysqli_real_escape_string($conn, $_POST['ttd_data']);
 
-    // Insert ke tabel layanan yang barusan kita rancang
-    $query = "INSERT INTO layanan (nama, email, kategori, pesan, ttd_data) VALUES ('$nama', '$email', '$kategori', '$pesan', '$ttd_data')";
+    // PERBAIKAN: Menyertakan kolom dan data telepon ke dalam SQL query
+    $query = "INSERT INTO layanan (nama, email, telepon, kategori, pesan, ttd_data) VALUES ('$nama', '$email', '$telepon', '$kategori', '$pesan', '$ttd_data')";
     
     if (mysqli_query($conn, $query)) {
         $notif_sukses = true;
@@ -44,23 +45,14 @@ if (isset($_POST['kirim_layanan'])) {
 </head>
 <body class="bg-white text-slate-800">
 
-    <?php if ($notif_sukses): ?>
-        <script>
-            alert("Terima kasih! Pesan dan Tanda Tangan Anda berhasil disimpan ke sistem kami.");
-            window.location='layanan.php';
-        </script>
-    <?php endif; ?>
-
     <nav class="flex items-center justify-between px-6 md:px-12 py-5 bg-white sticky top-0 z-50 shadow-sm transition-all duration-300" id="main-nav">
         <div class="flex items-center gap-2">
             <img src="../assets/img/NGS.png" alt="Logo" class="h-10 md:h-16 w-auto">
         </div>
         <div class="hidden md:flex gap-8 font-semibold text-[#043978]">
-            <a href="home.php" class="hover:text-[#5AAC41] transition-colors">Home</a>
+            <a href="home.php" class="hover:text-[#5AAC41] transition-colors text-[#5AAC41]">Home</a>
             <a href="produk.php" class="hover:text-[#5AAC41] transition-colors">Produk</a>
-            <a href="../index.php#rental" class="hover:text-[#5AAC41] transition-colors">Rental</a>
-            <a href="../index.php#kalibrasi" class="hover:text-[#5AAC41] transition-colors">Kalibrasi</a>
-            <a href="layanan.php" class="hover:text-[#5AAC41] transition-colors text-[#5AAC41]">Tentang Kami</a>
+            <a href="layanan.php" class="hover:text-[#5AAC41] transition-colors">Tentang Kami</a>
         </div>
         <div class="flex items-center gap-4">
             <a href="layanan.php" class="bg-[#043978] text-white px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 hover:bg-[#195994] transition shadow-md">
@@ -103,14 +95,20 @@ if (isset($_POST['kirim_layanan'])) {
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori Permintaan</label>
-                    <select name="kategori_permintaan" required class="w-full bg-slate-50 border border-slate-200 px-5 py-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#5AAC41] text-slate-600 transition">
-                        <option value="Pembelian Unit Baru">Pembelian Unit Baru</option>
-                        <option value="Rental Alat Survey">Rental Alat Survey</option>
-                        <option value="Kalibrasi & Service">Kalibrasi & Service</option>
-                        <option value="Konsultasi Proyek Topografi">Konsultasi Proyek Topografi</option>
-                    </select>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Nomor Telepon / WhatsApp</label>
+                        <input type="tel" name="no_telepon" placeholder="Contoh: 081234567xxx" required class="w-full bg-slate-50 border border-slate-200 px-5 py-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#5AAC41] focus:border-transparent transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Kategori Permintaan</label>
+                        <select name="kategori_permintaan" required class="w-full bg-slate-50 border border-slate-200 px-5 py-4 rounded-xl text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-[#5AAC41] text-slate-600 transition">
+                            <option value="Pembelian Unit Baru">Pembelian Unit Baru</option>
+                            <option value="Rental Alat Survey">Rental Alat Survey</option>
+                            <option value="Kalibrasi & Service">Kalibrasi & Service</option>
+                            <option value="Konsultasi Proyek Topografi">Konsultasi Proyek Topografi</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div>
@@ -141,9 +139,21 @@ if (isset($_POST['kirim_layanan'])) {
                     </button>
                 </div>
             </form>
-
         </div>
     </main>
+
+    <div id="popup-sukses" class="fixed inset-0 bg-slate-900/40 backdrop-blur-md z-[200] flex items-center justify-center hidden opacity-0 transition-opacity duration-300">
+        <div class="bg-white max-w-sm w-full rounded-[2.5rem] p-8 text-center border border-slate-100 shadow-2xl transform scale-90 transition-transform duration-300">
+            <div class="w-20 h-10 bg-green-50 text-[#5AAC41] rounded-full flex items-center justify-center mx-auto mb-5 text-4xl animate-bounce">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 class="text-xl font-black text-[#043978] tracking-tight">Permintaan Berhasil Terkirim!</h3>
+            <p class="text-xs text-slate-400 font-medium mt-3 mb-6 leading-relaxed">Pesan penawaran dan lembar otentikasi tanda tangan digital Anda telah berhasil diarsipkan ke pusat sistem NGS Core.</p>
+            <button onclick="tutupNotif()" class="w-full bg-[#043978] hover:bg-[#5AAC41] text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition shadow-lg shadow-blue-900/20">
+                Selesai & Tutup
+            </button>
+        </div>
+    </div>
 
     <footer class="bg-[#0f172a] text-white pt-24 pb-12 px-6 md:px-12 relative">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
@@ -176,7 +186,6 @@ if (isset($_POST['kirim_layanan'])) {
                     <a href="https://www.facebook.com/share/18n6Cx5Heb/" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#043978] transition"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/muhammad_hafizh3105?igsh=MXV5bW5rdWo1dHluMw==" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#5AAC41] transition"><i class="fab fa-instagram"></i></a>
                 </div>
-                
                 <h5 class="font-bold mb-4 uppercase tracking-widest text-sm text-[#5AAC41]">Internal System</h5>
                 <a href="admin/login.php" class="inline-flex items-center gap-2 text-xs bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-500 px-4 py-2.5 rounded-lg text-slate-300 hover:text-white transition-all font-semibold tracking-wider">
                     <i class="fas fa-lock text-xs"></i> PANEL LOGIN ADMIN
@@ -262,7 +271,6 @@ if (isset($_POST['kirim_layanan'])) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         }
 
-        // PERBAIKAN VALIDASI: Menyiapkan string gambar kanvas sebelum form disubmit secara native
         function submitForm(event) {
             const blank = document.createElement('canvas');
             blank.width = canvas.width;
@@ -270,7 +278,7 @@ if (isset($_POST['kirim_layanan'])) {
             
             if (canvas.toDataURL() === blank.toDataURL()) {
                 alert("Mohon bubuhkan Tanda Tangan Digital Anda sebelum mengirim form.");
-                event.preventDefault(); // Cegah pengiriman data ke server jika TTD kosong
+                event.preventDefault(); 
                 return false;
             }
 
@@ -278,6 +286,27 @@ if (isset($_POST['kirim_layanan'])) {
             document.getElementById('ttd_data').value = dataURL;
             return true;
         }
+
+        // PENGENDALIAN ANIMASI POPUP KUSTOM
+        function panggilPopup() {
+            const popup = document.getElementById('popup-sukses');
+            popup.classList.remove('hidden');
+            setTimeout(() => {
+                popup.classList.remove('opacity-0');
+                popup.classList.add('opacity-100');
+                popup.querySelector('div').classList.remove('scale-90');
+                popup.querySelector('div').classList.add('scale-100');
+            }, 50);
+        }
+
+        function tutupNotif() {
+            window.location.href = 'layanan.php';
+        }
+
+        // Jalankan pemicu popup kustom jika status PHP sukses bernilai true
+        <?php if ($notif_sukses): ?>
+            panggilPopup();
+        <?php endif; ?>
     </script>
 </body>
 </html>
