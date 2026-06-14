@@ -15,9 +15,4 @@ Proyek ini adalah landing page modern untuk **Nusa Geospatial Solutions (NGS)**,
 - **Floating WhatsApp**: Integrasi cepat untuk layanan pelanggan via WhatsApp.
 - **Navigation Scrolled Effect**: Navbar yang mengecil secara otomatis saat halaman digulir.
 
-## 🛠️ Teknologi yang Digunakan
-- **HTML5**: Struktur web semantik.
-- **CSS3 (Custom & Tailwind)**: Menggunakan Tailwind CSS untuk utilitas dan Custom CSS untuk efek khusus.
-- **JavaScript (Native)**: Logika untuk menu mobile, animasi scroll, dan efek navbar.
-- **Google Fonts**: Menggunakan font *Plus Jakarta Sans* untuk tampilan modern.
 
