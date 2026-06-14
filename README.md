@@ -1,7 +1,7 @@
 # Nusa Geospatial Solutions - Landing Page
 
 <p align="center">
-  <img src="img/Brand.png" alt="Nusa Geospatial Logo" width="200">
+  <img src="assets/img/Brand.png" alt="Nusa Geospatial Logo" width="200">
 </p>
 
 ## 📌 Deskripsi Proyek
