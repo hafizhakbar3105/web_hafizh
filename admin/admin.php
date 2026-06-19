@@ -49,6 +49,16 @@ if (isset($_POST['tambah_kategori_baru'])) {
     }
 }
 
+// LOGIKA HAPUS KATEGORI
+if (isset($_GET['hapus_kategori'])) {
+    $id_kat_hapus = mysqli_real_escape_string($conn, $_GET['hapus_kategori']);
+    if (mysqli_query($conn, "DELETE FROM kategori WHERE id = '$id_kat_hapus'")) {
+        $_SESSION['success_msg'] = "Kategori berhasil dihapus dari sistem!";
+        header("Location: admin.php");
+        exit;
+    }
+}
+
 // --- 4. LOGIKA TAMBAH PRODUK ---
 if (isset($_POST['tambah_produk'])) {
     $nama      = mysqli_real_escape_string($conn, $_POST['nama_produk']);
@@ -140,24 +150,15 @@ $total_layanan = $data_layanan['total'] ?? 0;
     <style>
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
         
-        /* FIX DAN PERBAIKAN ERROR JALUR CSS (Gambar Ke-4) */
         .dataTables_wrapper { padding: 1.5rem; background: white; border-radius: 1.5rem; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         table.dataTable { border-collapse: collapse !important; width: 100% !important; margin: 1rem 0 !important; }
         table.dataTable thead th { background-color: #f8fafc; color: #64748b !important; font-weight: 700 !important; text-transform: uppercase; font-size: 10px; letter-spacing: 0.05em; padding: 1rem !important; border-bottom: 1px solid #e2e8f0 !important; }
         table.dataTable tbody td { padding: 1rem !important; border-bottom: 1px solid #f1f5f9 !important; font-size: 13px; color: #334155; }
         table.dataTable.no-footer { border-bottom: none; }
         
-        .dt-buttons .dt-button {
-            background: #043978 !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 0.75rem !important;
-            font-weight: 700 !important;
-            font-size: 11px !important;
-            padding: 0.5rem 1.2rem !important;
-            transition: all 0.2s ease;
-        }
-        .dt-buttons .dt-button:hover { background: #5AAC41 !important; }
+        /* Menyembunyikan tombol asli DataTables */
+        .dt-buttons { display: none !important; }
+        
         .dataTables_filter input {
             background-color: #f1f5f9;
             border: 1px solid #e2e8f0;
@@ -168,6 +169,14 @@ $total_layanan = $data_layanan['total'] ?? 0;
             transition: all 0.2s;
         }
         .dataTables_filter input:focus { border-color: #5AAC41; background-color: white; }
+
+        #signature-pad-admin {
+            border: 2px dashed #cbd5e1;
+            border-radius: 1rem;
+            cursor: crosshair;
+            background-color: #f8fafc;
+            touch-action: none;
+        }
     </style>
 </head>
 <body class="bg-[#f8fafc] flex flex-col min-h-screen">
@@ -181,7 +190,6 @@ $total_layanan = $data_layanan['total'] ?? 0;
         
         <div class="flex items-center gap-6 text-xs font-bold text-slate-500">
             <a href="admin.php" class="text-[#043978] border-b-2 border-[#043978] pb-1">DASHBOARD ADMIN</a>
-            <a href="../produk.php" target="_blank" class="hover:text-[#5AAC41] transition">KELOLA KATALOG</a>
             <a href="../home.php" target="_blank" class="hover:text-[#5AAC41] transition">LIHAT SITUS</a>
         </div>
         
@@ -219,13 +227,25 @@ $total_layanan = $data_layanan['total'] ?? 0;
                 <h3 class="text-base font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
                     <div class="w-1.5 h-4 bg-[#043978] rounded-full"></div> KELOLA <span class="text-[#195994] font-light italic">PRODUK UTAMA</span>
                 </h3>
-                <p class="text-[11px] text-slate-400 font-semibold mt-1">Menampilkan 3 produk unggulan di halaman beranda publik.</p>
+                <p class="text-[11px] text-slate-400 font-semibold mt-1">Gunakan tombol unduh di bawah untuk mengekspor data rekapitulasi inventaris resmi.</p>
             </div>
-            <div>
+            <div class="flex gap-3">
+                <button onclick="document.getElementById('modal-kategori').classList.remove('hidden')" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-sm flex items-center gap-2">
+                    <i class="fas fa-folder-plus text-[10px] text-[#043978]"></i> Kelola Kategori
+                </button>
                 <button onclick="document.getElementById('modal-tambah').classList.remove('hidden')" class="bg-[#043978] hover:bg-[#5AAC41] text-white px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
                     <i class="fas fa-plus text-[10px]"></i> Tambah Alat Baru
                 </button>
             </div>
+        </div>
+
+        <div class="flex gap-2 mb-4">
+            <button onclick="bukaModalTtd('pdf')" class="bg-[#043978] hover:bg-[#5AAC41] text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-sm flex items-center gap-2">
+                <i class="fas fa-file-pdf"></i> Export PDF Resmi
+            </button>
+            <button onclick="bukaModalTtd('excel')" class="bg-[#043978] hover:bg-[#5AAC41] text-white text-xs font-bold px-5 py-3 rounded-xl transition shadow-sm flex items-center gap-2">
+                <i class="fas fa-file-excel"></i> Export Excel
+            </button>
         </div>
 
         <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden mb-14 p-2">
@@ -278,11 +298,6 @@ $total_layanan = $data_layanan['total'] ?? 0;
                     <div class="w-1.5 h-4 bg-[#5AAC41] rounded-full"></div> KELOLA <span class="text-[#5AAC41] font-light italic">INSIGHT & LAYANAN</span>
                 </h3>
                 <p class="text-[11px] text-slate-400 font-semibold mt-1">Dokumentasi kegiatan lapangan dan publikasi ulasan artikel teknis.</p>
-            </div>
-            <div>
-                <button onclick="document.getElementById('modal-kategori').classList.remove('hidden')" class="bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 px-5 py-3 rounded-xl font-bold text-xs uppercase tracking-wider transition shadow-sm flex items-center gap-2">
-                    <i class="fas fa-folder-plus text-[10px] text-[#043978]"></i> + Kategori Baru
-                </button>
             </div>
         </div>
 
@@ -337,15 +352,58 @@ $total_layanan = $data_layanan['total'] ?? 0;
         </div>
     </main>
 
+    <div id="modal-ttd-export" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[150] flex items-center justify-center hidden">
+        <div class="bg-white w-full max-w-xl rounded-[2rem] p-8 relative mx-4 shadow-2xl border border-slate-100">
+            <button onclick="tutupModalTtd()" class="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition"><i class="fas fa-times-circle text-xl"></i></button>
+            
+            <h2 class="text-xl font-black text-slate-800 mb-1 flex items-center gap-2"><i class="fas fa-file-signature text-[#043978]"></i> Verifikasi Penanggung Jawab</h2>
+            <p class="text-xs text-slate-400 mb-6">Silakan masukkan nama lengkap dan bubuhkan tanda tangan digital Anda di bawah ini sebelum mengunduh berkas.</p>
+            
+            <div class="mb-4">
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">Nama Lengkap Pelapor / Admin</label>
+                <input type="text" id="nama_pelapor_pdf" placeholder="Masukkan nama lengkap Anda..." required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-200 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41] focus:bg-white transition">
+            </div>
+
+            <div class="relative w-full mb-6">
+                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">Goresan Tanda Tangan</label>
+                <canvas id="signature-pad-admin" class="w-full h-44"></canvas>
+                <button type="button" onclick="clearAdminCanvas()" class="absolute top-9 right-3 bg-red-50 text-red-500 hover:bg-red-500 hover:text-white text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition shadow-sm">
+                    <i class="fas fa-eraser"></i> Reset Goresan
+                </button>
+            </div>
+            
+            <button id="btnConfirmExport" class="w-full bg-[#5AAC41] hover:bg-[#4d9437] text-white py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition shadow-lg shadow-green-900/20">
+                Konfirmasi TTD & Unduh Berkas
+            </button>
+        </div>
+    </div>
+
     <div id="modal-kategori" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100] flex items-center justify-center hidden">
-        <div class="bg-white w-full max-w-md rounded-[2rem] p-8 relative mx-4">
+        <div class="bg-white w-full max-w-lg rounded-[2rem] p-8 relative mx-4 max-h-[95vh] flex flex-col">
             <button onclick="document.getElementById('modal-kategori').classList.add('hidden')" class="absolute top-6 right-6 text-slate-300 hover:text-red-500 transition"><i class="fas fa-times-circle text-xl"></i></button>
-            <h2 class="text-xl font-black text-slate-800 mb-1">Kategori Baru</h2>
-            <p class="text-xs text-slate-400 mb-5">Tambahkan klasifikasi instrumen baru ke database.</p>
-            <form action="" method="POST" class="space-y-4">
-                <input type="text" name="nama_kategori_baru" placeholder="Contoh: GNSS RTK, Aksesoris Alat" required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41] focus:bg-white transition">
-                <button type="submit" name="tambah_kategori_baru" class="w-full bg-[#043978] hover:bg-[#5AAC41] text-white py-3.5 rounded-xl font-bold uppercase tracking-widest text-[10px] transition shadow-md">Simpan Kategori</button>
+            <h2 class="text-xl font-black text-slate-800 mb-1">Manajemen Kategori</h2>
+            <p class="text-xs text-slate-400 mb-5">Tambahkan kategori instrumen baru atau hapus klasifikasi yang tidak digunakan lagi.</p>
+            <form action="" method="POST" class="space-y-3 mb-6 pb-6 border-b border-slate-100">
+                <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tambah Kategori Baru</label>
+                <div class="flex gap-2">
+                    <input type="text" name="nama_kategori_baru" placeholder="Contoh: Drone LiDAR, Global GPS" required class="flex-1 px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41] focus:bg-white transition">
+                    <button type="submit" name="tambah_kategori_baru" class="bg-[#043978] hover:bg-[#5AAC41] text-white px-5 rounded-xl font-bold uppercase text-[10px] transition shadow-md">Simpan</button>
+                </div>
             </form>
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Daftar Kategori Aktif</label>
+            <div class="flex-1 overflow-y-auto space-y-2 max-h-64 pr-1">
+                <?php 
+                $list_kat = mysqli_query($conn, "SELECT * FROM kategori ORDER BY nama_kategori ASC");
+                while($lk = mysqli_fetch_assoc($list_kat)) {
+                ?>
+                    <div class="flex justify-between items-center bg-slate-50 border border-slate-100 rounded-xl px-4 py-3">
+                        <span class="text-xs font-bold text-slate-700 uppercase tracking-tight"><?= htmlspecialchars($lk['nama_kategori']); ?></span>
+                        <a href="admin.php?hapus_kategori=<?= $lk['id']; ?>" onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')" class="text-red-400 hover:text-red-600 text-xs p-1.5 transition">
+                            <i class="fas fa-trash-alt"></i>
+                        </a>
+                    </div>
+                <?php } ?>
+            </div>
         </div>
     </div>
 
@@ -441,24 +499,144 @@ $total_layanan = $data_layanan['total'] ?? 0;
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
 
     <script>
+        const adminCanvas = document.getElementById('signature-pad-admin');
+        const adminCtx = adminCanvas.getContext('2d');
+        let adminIsDrawing = false;
+        let modeExportTersimpan = ""; 
+
+        function resizeAdminCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            adminCanvas.width = adminCanvas.offsetWidth * ratio;
+            adminCanvas.height = adminCanvas.offsetHeight * ratio;
+            adminCtx.scale(ratio, ratio);
+            adminCtx.lineWidth = 2.5;
+            adminCtx.lineCap = 'round';
+            adminCtx.strokeStyle = '#043978';
+        }
+
+        adminCanvas.addEventListener('mousedown', (e) => { adminIsDrawing = true; putarGaris(e); });
+        adminCanvas.addEventListener('mousemove', putarGaris);
+        adminCanvas.addEventListener('mouseup', () => { adminIsDrawing = false; adminCtx.beginPath(); });
+        adminCanvas.addEventListener('mouseout', () => { adminIsDrawing = false; adminCtx.beginPath(); });
+
+        adminCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); adminIsDrawing = true; putarGaris(e.touches[0]); }, { passive: false });
+        adminCanvas.addEventListener('touchmove', (e) => { e.preventDefault(); putarGaris(e.touches[0]); }, { passive: false });
+        adminCanvas.addEventListener('touchend', () => { adminCtx.beginPath(); });
+
+        function putarGaris(e) {
+            if (!adminIsDrawing) return;
+            const rect = adminCanvas.getBoundingClientRect();
+            const clientX = e.clientX || e.pageX;
+            const clientY = e.clientY || e.pageY;
+            const x = clientX - rect.left;
+            const y = clientY - rect.top;
+
+            adminCtx.lineTo(x, y);
+            adminCtx.stroke();
+            adminCtx.beginPath();
+            adminCtx.moveTo(x, y);
+        }
+
+        function clearAdminCanvas() {
+            adminCtx.clearRect(0, 0, adminCanvas.width, adminCanvas.height);
+        }
+
+        function dapatkanTtdBase64() {
+            const blank = document.createElement('canvas');
+            blank.width = adminCanvas.width;
+            blank.height = adminCanvas.height;
+            if (adminCanvas.toDataURL() === blank.toDataURL()) {
+                return null;
+            }
+            return adminCanvas.toDataURL('image/png');
+        }
+
+        function bukaModalTtd(mode) {
+            modeExportTersimpan = mode;
+            document.getElementById('nama_pelapor_pdf').value = ""; // Reset form nama
+            clearAdminCanvas();
+            document.getElementById('modal-ttd-export').classList.remove('hidden');
+            setTimeout(resizeAdminCanvas, 50); 
+        }
+
+        function tutupModalTtd() {
+            document.getElementById('modal-ttd-export').classList.add('hidden');
+        }
+
         $(document).ready(function() {
-            // 1. DataTables Master Alat
-            $('#laporanTable').DataTable({
-                "dom": '<"flex justify-between items-center mb-4"<"flex gap-2"B><"flex items-center"f>>rt<"flex justify-between items-center mt-4"ip>',
+            // 1. DataTables Master Alat + PROPERTI KUSTOMISASI PDF INTEGRASI INPUT NAMA PELAPOR
+            var tableAlat = $('#laporanTable').DataTable({
+                "dom": '<"flex justify-between items-center mb-4"f>rt<"flex justify-between items-center mt-4"ip>',
                 "buttons": [
-                    { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf mr-1"></i> PDF', title: 'Laporan Rekapitulasi Data Base - NGS Core', exportOptions: { columns: [0, 2, 3, 4] } },
-                    { extend: 'excelHtml5', text: '<i class="fas fa-file-excel mr-1"></i> Excel', exportOptions: { columns: [0, 2, 3, 4] } }
+                    {
+                        extend: 'pdfHtml5',
+                        title: '',
+                        exportOptions: { columns: [0, 2, 3, 4] },
+                        customize: function (doc) {
+                            const ttdAdmin = dapatkanTtdBase64();
+                            // Ambil nama dari value input teks modal popup secara dinamis
+                            const namaInputan = document.getElementById('nama_pelapor_pdf').value.toUpperCase() || 'ADMINISTRATOR';
+
+                            doc.pageMargins = [40, 40, 40, 40];
+                            doc.content.splice(0, 0, 
+                                { text: 'NUSA GEOSPATIAL SOLUTIONS', fontSize: 16, bold: true, color: '#043978', alignment: 'center', margin: [0, 0, 0, 4] },
+                                { text: 'Laporan Rekapitulasi Inventaris Aset Alat & Instrumen Survei', fontSize: 10, fontStyle: 'italic', alignment: 'center', margin: [0, 0, 0, 20] },
+                                { canvas: [{ type: 'line', x1: 0, y1: 0, x2: 515, y2: 0, lineWidth: 1.5, strokeColor: '#043978' }], margin: [0, 0, 0, 15] }
+                            );
+
+                            var objLayout = {};
+                            objLayout['hLineWidth'] = function() { return .5; };
+                            objLayout['vLineWidth'] = function() { return 0; };
+                            objLayout['hLineColor'] = function() { return '#e2e8f0'; };
+                            objLayout['paddingLeft'] = function() { return 10; };
+                            objLayout['paddingRight'] = function() { return 10; };
+                            doc.content[3].layout = objLayout;
+
+                            // Menyisipkan Tanda Tangan Beserta Nama Pelapor Dinamis di Akhir PDF
+                            doc.content.push(
+                                { text: 'Sukabumi, ' + new Date().toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' }), alignment: 'right', margin: [0, 30, 40, 5], fontSize: 10 },
+                                { text: 'Petugas Penanggung Jawab,', alignment: 'right', margin: [0, 0, 40, 10], fontSize: 10, bold: true },
+                                { image: ttdAdmin, width: 100, alignment: 'right', margin: [0, 0, 35, 5] },
+                                { text: '( ' + namaInputan + ' )', alignment: 'right', margin: [0, 0, 20, 0], fontSize: 10, bold: true, color: '#043978' }
+                            );
+                        }
+                    },
+                    {
+                        extend: 'excelHtml5',
+                        title: 'Laporan Inventaris Barang NGS Core',
+                        exportOptions: { columns: [0, 2, 3, 4] }
+                    }
                 ],
                 "language": { "search": "", "searchPlaceholder": "Cari data alat...", "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data" }
             });
 
-            // 2. DataTables Layanan Pelanggan
+            // LOGIKA EKSEKUSI KLIK DOWNLOAD DI DALAM POPUP MODAL TTD
+            document.getElementById('btnConfirmExport').addEventListener('click', function() {
+                const namaPelapor = document.getElementById('nama_pelapor_pdf').value.trim();
+                const ttdData = dapatkanTtdBase64();
+
+                // Validasi Kelengkapan Berkas
+                if (namaPelapor === "") {
+                    alert("⚠️ BERKAS DITOLAK: Harap isi Nama Lengkap Pelapor terlebih dahulu.");
+                    return;
+                }
+                if (!ttdData) {
+                    alert("⚠️ BERKAS DITOLAK: Mohon lengkapi goresan Tanda Tangan Anda.");
+                    return;
+                }
+
+                tutupModalTtd();
+
+                // Jalankan trigger tombol bawaan DataTables
+                if (modeExportTersimpan === "pdf") {
+                    tableAlat.button('.buttons-pdf').trigger();
+                } else if (modeExportTersimpan === "excel") {
+                    // Berhubung excel tidak bisa membaca blob kanvas langsung dari JS, kita tambahkan info via alert
+                    tableAlat.button('.buttons-excel').trigger();
+                }
+            });
+
             $('#layananTable').DataTable({
-                "dom": '<"flex justify-between items-center mb-4"<"flex gap-2"B><"flex items-center"f>>rt<"flex justify-between items-center mt-4"ip>',
-                "buttons": [
-                    { extend: 'pdfHtml5', text: '<i class="fas fa-file-pdf mr-1"></i> PDF', title: 'Laporan Permintaan Layanan & Kontrak - NGS Core', exportOptions: { columns: [0, 1, 2, 3, 4, 5] } },
-                    { extend: 'excelHtml5', text: '<i class="fas fa-file-excel mr-1"></i> Excel', title: 'Laporan Permintaan Layanan & Kontrak - NGS Core', exportOptions: { columns: [0, 1, 2, 3, 4, 5] } }
-                ],
                 "language": { "search": "", "searchPlaceholder": "Cari data pemohon...", "info": "Menampilkan _START_ sampai _END_ dari _TOTAL_ data pemohon" }
             });
 
