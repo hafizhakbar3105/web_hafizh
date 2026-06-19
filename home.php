@@ -30,6 +30,16 @@
             transform: translate(-50%, -50%);
             object-fit: cover;
         }
+
+        /* Gaya Khusus Slider Video Full */
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slide-item {
+            flex: 0 0 100%;
+            width: 100%;
+        }
     </style>
 </head>
 <body class="bg-white text-slate-800">
@@ -62,30 +72,24 @@
     </div>
 
     <section id="home" class="h-[650px] flex items-center px-6 md:px-12 text-white overflow-hidden relative">
-        
         <div class="video-container">
             <video autoplay muted loop playsinline poster="assets/img/tambang.png">
                 <source src="assets/video/GNSS.mp4" type="video/mp4">
                 Browser Anda tidak mendukung pemutar video.
             </video>
         </div>
-
         <div class="absolute inset-0 bg-[#043978]/85 mix-blend-multiply z-10"></div>
-
         <div class="container mx-auto relative z-20">
             <div class="max-w-4xl animate-fade-in-up">
                 <div class="w-14 h-1.5 bg-[#E7D532] mb-8 rounded-full"></div>
-                
                 <h1 class="text-4xl md:text-7xl font-extrabold leading-[1.1] mb-6 tracking-tight">
                     Solusi Presisi untuk<br>
                     <span class="text-white">Masa Depan Geospatial</span>
                 </h1>
-                
                 <p class="text-base md:text-xl mb-10 opacity-90 max-w-2xl leading-relaxed">
                     Penyedia layanan dan alat survey terintegrasi. Kami menghadirkan teknologi GNSS, 
                     Total Station, dan Drone terbaik untuk mendukung akurasi proyek infrastruktur Anda.
                 </p>
-                
                 <div class="flex flex-wrap gap-5">
                     <a href="produk.php" class="bg-[#5AAC41] hover:bg-[#4d9437] px-10 py-4 rounded-lg font-bold flex items-center gap-3 transition-all transform hover:scale-105 shadow-xl shadow-green-900/20 text-white">
                         Jelajahi Produk <i class="fas fa-arrow-right text-sm"></i>
@@ -138,6 +142,74 @@
         <div class="flex justify-center relative reveal">
             <div class="absolute -top-4 -right-4 w-full h-full border-2 border-[#E7D532] rounded-2xl -z-10"></div>
             <img src="assets/img/hafizh.png" class="rounded-2xl shadow-2xl w-full max-w-sm object-cover aspect-square" alt="Team">
+        </div>
+    </section>
+
+    <section id="video-kegiatan" class="py-20 bg-slate-50 px-6 md:px-12">
+        <div class="max-w-5xl mx-auto space-y-10">
+            
+            <div class="text-center max-w-2xl mx-auto space-y-3">
+                <div class="w-12 h-1 bg-[#5AAC41] mx-auto"></div>
+                <h2 class="text-3xl md:text-4xl font-extrabold text-[#043978] tracking-tight uppercase">
+                    Dokumentasi <span class="text-[#195994] font-light italic">Fitur Alat</span>
+                </h2>
+                <p class="text-xs md:text-sm text-slate-400 font-medium">
+                    Geser untuk melihat demonstrasi dan panduan operasional teknologi alat survei presisi tinggi kami.
+                </p>
+            </div>
+
+            <div class="relative bg-white p-4 md:p-6 rounded-[2.5rem] border border-slate-100 shadow-2xl shadow-slate-200/60 overflow-hidden group">
+                
+                <div class="overflow-hidden rounded-2xl md:rounded-[1.8rem]">
+                    <div id="videoSliderWrapper" class="slider-wrapper">
+                        
+                        <div class="slide-item space-y-4">
+                            <div class="aspect-video w-full bg-black shadow-inner">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/yYyH20qS06Y" title="Slide 1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            </div>
+                            <div class="text-center pt-2 pb-1">
+                                <span class="text-[9px] font-black text-[#5AAC41] bg-green-50 px-2.5 py-1 rounded-md uppercase tracking-wider">Slide 1</span>
+                                <h4 class="text-base font-black text-[#043978] mt-2 uppercase tracking-tight">Pengukuran GNSS RTK i73 CHCNAV</h4>
+                            </div>
+                        </div>
+
+                        <div class="slide-item space-y-4">
+                            <div class="aspect-video w-full bg-black shadow-inner">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/j4JBzGddVgQ" title="Slide 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            </div>
+                            <div class="text-center pt-2 pb-1">
+                                <span class="text-[9px] font-black text-[#043978] bg-blue-50 px-2.5 py-1 rounded-md uppercase tracking-wider">Slide 2</span>
+                                <h4 class="text-base font-black text-[#043978] mt-2 uppercase tracking-tight">Inspeksi & Fotogrametri Udara UAV Drone</h4>
+                            </div>
+                        </div>
+
+                        <div class="slide-item space-y-4">
+                            <div class="aspect-video w-full bg-black shadow-inner">
+                                <iframe class="w-full h-full" src="https://www.youtube.com/embed/aC3cTxQA1DI" title="Slide 3" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                            </div>
+                            <div class="text-center pt-2 pb-1">
+                                <span class="text-[9px] font-black text-amber-600 bg-amber-50 px-2.5 py-1 rounded-md uppercase tracking-wider">Slide 3</span>
+                                <h4 class="text-base font-black text-[#043978] mt-2 uppercase tracking-tight">Kalibrasi & Service Total Station</h4>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button id="prevBtn" class="absolute left-6 top-[42%] -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 hover:bg-[#5AAC41] text-[#043978] hover:text-white shadow-xl flex items-center justify-center text-lg transition-all duration-300 z-10 active:scale-90">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button id="nextBtn" class="absolute right-6 top-[42%] -translate-y-1/2 w-12 h-12 rounded-full bg-white/90 hover:bg-[#5AAC41] text-[#043978] hover:text-white shadow-xl flex items-center justify-center text-lg transition-all duration-300 z-10 active:scale-90">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <div class="flex justify-center gap-2 mt-4" id="dotsContainer">
+                    <button class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-[#5AAC41]" onclick="goToSlide(0)"></button>
+                    <button class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-slate-200 hover:bg-slate-400" onclick="goToSlide(1)"></button>
+                    <button class="w-2.5 h-2.5 rounded-full transition-all duration-300 bg-slate-200 hover:bg-slate-400" onclick="goToSlide(2)"></button>
+                </div>
+
+            </div>
         </div>
     </section>
 
@@ -222,7 +294,7 @@
                             DJI MATRICE RTK SERIES DRONE MAPPING
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed text-justify line-clamp-6">
-                            Solusi fotogrametri udara terintegrasi untuk akurasi peta ortofoto skala besar. Mendukung pemetaan topografi, kalkulasi volume tambang terbuka (*stockpile*), dan inspeksi koridor infrastruktur secara cepat dan efisien.
+                            Solusi fotogrametri udara terintegrasi untuk akurasi peta ortofoto skala besar. Mendukung pemetaan topografi, kalkulasi volume tambang terbuka (*stockpile*), dan inspeksi koridor infrastruktur secara cepat and efisien.
                         </p>
                     </div>
                 </div>
@@ -260,7 +332,7 @@
                     Browser Anda tidak mendukung pemutar video.
                 </video>
             </div>
-            <audio id="clickSound" src="audio/click.mp3" preload="auto"></auto>
+            <audio id="clickSound" src="audio/click.mp3" preload="auto"></audio>
         </div>
     </div>
 
@@ -295,40 +367,78 @@
                     <a href="https://www.facebook.com/share/18n6Cx5Heb/" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#043978] transition"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://www.instagram.com/muhammad_hafizh3105?igsh=MXV5bW5rdWo1dHluMw==" class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-[#5AAC41] transition"><i class="fab fa-instagram"></i></a>
                 </div>
-                
                 <h5 class="font-bold mb-4 uppercase tracking-widest text-sm text-[#5AAC41]">Internal System</h5>
                 <a href="admin/login.php" class="inline-flex items-center gap-2 text-xs bg-white/5 hover:bg-red-600 border border-white/10 hover:border-red-500 px-4 py-2.5 rounded-lg text-slate-300 hover:text-white transition-all font-semibold tracking-wider">
                     <i class="fas fa-lock text-xs"></i> PANEL LOGIN ADMIN
                 </a>
             </div>
         </div>
-        <div class="text-center pt-8 border-t border-white/5 text-[11px] text-slate-500 tracking-[0.2em]">
+        <div class="max-w-7xl mx-auto text-center pt-8 border-t border-white/5 text-[11px] text-slate-500 tracking-[0.2em]">
             © 2026 NUSA GEOSPATIAL SOLUTIONS.
         </div>
     </footer>
 
+    <a href="https://wa.me/6281234567890" target="_blank" class="fixed bottom-8 right-8 w-16 h-16 bg-[#25D366] rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-[100] border-4 border-white">
+        <i class="fab fa-whatsapp text-4xl text-white"></i>
+    </a>
+
     <script>
+        // Logika Pengendali Slider Video Full Screen
+        let currentSlide = 0;
+        const wrapper = document.getElementById('videoSliderWrapper');
+        const totalSlides = document.querySelectorAll('.slide-item').length;
+        const dots = document.getElementById('dotsContainer').children;
+
+        function updateSlider() {
+            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            // Perbarui warna indikator bullet (dots)
+            for (let i = 0; i < dots.length; i++) {
+                if (i === currentSlide) {
+                    dots[i].classList.remove('bg-slate-200', 'w-2.5');
+                    dots[i].classList.add('bg-[#5AAC41]', 'w-6');
+                } else {
+                    dots[i].classList.remove('bg-[#5AAC41]', 'w-6');
+                    dots[i].classList.add('bg-slate-200', 'w-2.5');
+                }
+            }
+        }
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % totalSlides;
+            updateSlider();
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        });
+
+        function goToSlide(slideIndex) {
+            currentSlide = slideIndex;
+            updateSlider();
+        }
+
+        // Inisialisasi tampilan dots pertama kali
+        updateSlider();
+
+        // Logika Modal Video Profil Lama
         const modal = document.getElementById('videoModal');
         const video = document.getElementById('promoVideo');
         const audioBtn = document.getElementById('clickSound');
 
         function openVideoModal() {
             if(audioBtn) {
-                audioBtn.play().catch(err => console.log("Audio klik diblokir browser sebelum interaksi"));
+                audioBtn.play().catch(err => console.log("Audio klik diblokir browser"));
             }
-            
             modal.classList.remove('hidden');
             modal.classList.add('flex');
-            
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
                 modal.classList.add('opacity-100');
             }, 20);
-            
             if(video) {
                 video.currentTime = 0;
                 video.play().catch(error => {
-                    console.log("Autoplay diblokir browser, menggunakan mode muted...");
                     video.muted = true;
                     video.play();
                 });
@@ -338,11 +448,9 @@
         function closeVideoModal() {
             modal.classList.remove('opacity-100');
             modal.classList.add('opacity-0');
-            
             if(video) {
                 video.pause();
             }
-            
             setTimeout(() => {
                 modal.classList.remove('flex');
                 modal.classList.add('hidden');
