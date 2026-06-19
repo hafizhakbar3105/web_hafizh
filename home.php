@@ -164,7 +164,7 @@
                         <span class="absolute top-3 left-3 bg-black text-white text-[8px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase">
                             IMU Tilt
                         </span>
-                        <img src="assets/img/gnss-smart-full-antennas-chcnav-i93.png" alt="CHCNAV I73" class="max-h-48 object-contain" onerror="this.src='assets/img/Topcon_GM100_c.png'">
+                        <img src="assets/img/GM-50.png" alt="CHCNAV I73" class="max-h-48 object-contain" onerror="this.src='assets/img/Topcon_GM100_c.png'">
                     </div>
                     <div class="space-y-2">
                         <span class="text-[9px] font-bold text-[#5AAC41] tracking-widest uppercase">CHCNAV</span>
@@ -189,7 +189,7 @@
                         <span class="absolute top-3 left-3 bg-[#043978] text-white text-[8px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase">
                             Reflectorless
                         </span>
-                        <img src="assets/img/Topcon_GM100_c.png" alt="Topcon GM100" class="max-h-48 object-contain">
+                        <img src="assets/img/gnss-smart-full-antennas-chcnav-i83.png" alt="Topcon GM100" class="max-h-48 object-contain">
                     </div>
                     <div class="space-y-2">
                         <span class="text-[9px] font-bold text-[#5AAC41] tracking-widest uppercase">Topcon</span>
