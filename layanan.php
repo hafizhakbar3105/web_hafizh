@@ -13,8 +13,8 @@ if (isset($_POST['kirim_layanan'])) {
     $pesan    = mysqli_real_escape_string($conn, $_POST['pesan_tambahan']);
     $ttd_data = mysqli_real_escape_string($conn, $_POST['ttd_data']);
 
-    // PERBAIKAN: Menyertakan kolom dan data telepon ke dalam SQL query
-    $query = "INSERT INTO layanan (nama, email, telepon, kategori, pesan, ttd_data) VALUES ('$nama', '$email', '$telepon', '$kategori', '$pesan', '$ttd_data')";
+    // PERBAIKAN: Mengubah nama tabel menjadi layanan_hafizh_2430511012 sesuai standar shared database
+    $query = "INSERT INTO layanan_hafizh_2430511012 (nama, email, telepon, kategori, pesan, ttd_data) VALUES ('$nama', '$email', '$telepon', '$kategori', '$pesan', '$ttd_data')";
     
     if (mysqli_query($conn, $query)) {
         $notif_sukses = true;
@@ -309,4 +309,4 @@ if (isset($_POST['kirim_layanan'])) {
         <?php endif; ?>
     </script>
 </body>
-</html>
+</html> 

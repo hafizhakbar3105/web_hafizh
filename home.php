@@ -1,3 +1,7 @@
+<?php
+// Hubungkan ke file koneksi database
+include 'admin/koneksi.php';
+?>
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -230,46 +234,28 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-            <div class="bg-white rounded-[2.5rem] border border-slate-100 p-6 shadow-xl shadow-slate-200/50 flex flex-col justify-between transition-all hover:scale-[1.03] hover:shadow-2xl duration-300">
-                <div>
-                    <div class="bg-slate-50 rounded-2xl p-4 flex justify-center items-center mb-6 relative overflow-hidden aspect-square">
-                        <span class="absolute top-3 left-3 bg-black text-white text-[8px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase">
-                            IMU Tilt
-                        </span>
-                        <img src="assets/img/GM-50.png" alt="CHCNAV I73" class="max-h-48 object-contain" onerror="this.src='assets/img/Topcon_GM100_c.png'">
-                    </div>
-                    <div class="space-y-2">
-                        <span class="text-[9px] font-bold text-[#5AAC41] tracking-widest uppercase">CHCNAV</span>
-                        <h3 class="text-lg font-extrabold text-[#043978] leading-snug min-h-[56px]">
-                            CHCNAV I73 / I73+ POCKET GNSS RTK
-                        </h3>
-                        <p class="text-xs text-slate-400 leading-relaxed text-justify line-clamp-6">
-                            GNSS RTK ultra-kompak dilengkapi teknologi IMU-RTK terintegrasi untuk kompensasi kemiringan otomatis. Memungkinkan pengukuran titik sulit dengan akurasi tinggi tanpa perlu levelling manual, meningkatkan produktivitas lapangan hingga 30%.
-                        </p>
-                    </div>
-                </div>
-                <div class="pt-6">
-                    <a href="produk.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
-                        Detail Produk <i class="fas fa-arrow-circle-right text-xs"></i>
-                    </a>
-                </div>
-            </div>
-
+            <?php
+            // PERBAIKAN: Mengambil 3 produk terbaru dari tabel produk_hafizh_2430511012
+            $query = mysqli_query($conn, "SELECT * FROM produk_hafizh_2430511012 ORDER BY id DESC LIMIT 3");
+            
+            if(mysqli_num_rows($query) > 0){
+                while($row = mysqli_fetch_assoc($query)){
+            ?>
             <div class="bg-white rounded-[2.5rem] border border-slate-100 p-6 shadow-xl shadow-slate-200/50 flex flex-col justify-between transition-all hover:scale-[1.03] hover:shadow-2xl duration-300">
                 <div>
                     <div class="bg-slate-50 rounded-2xl p-4 flex justify-center items-center mb-6 relative overflow-hidden aspect-square">
                         <span class="absolute top-3 left-3 bg-[#043978] text-white text-[8px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase">
-                            Reflectorless
+                            <?php echo htmlspecialchars($row['kategori']); ?>
                         </span>
-                        <img src="assets/img/gnss-smart-full-antennas-chcnav-i83.png" alt="Topcon GM100" class="max-h-48 object-contain">
+                        <img src="assets/img/<?php echo $row['gambar']; ?>" alt="<?php echo htmlspecialchars($row['nama_produk']); ?>" class="max-h-48 object-contain" onerror="this.src='assets/img/Topcon_GM100_c.png'">
                     </div>
                     <div class="space-y-2">
-                        <span class="text-[9px] font-bold text-[#5AAC41] tracking-widest uppercase">Topcon</span>
-                        <h3 class="text-lg font-extrabold text-[#043978] leading-snug min-h-[56px]">
-                            TOTAL STATION TOPCON GM-100 SERIES
+                        <span class="text-[9px] font-bold text-[#5AAC41] tracking-widest uppercase">PREMIUM EQUIPMENT</span>
+                        <h3 class="text-lg font-extrabold text-[#043978] leading-snug min-h-[56px] uppercase line-clamp-2">
+                            <?php echo htmlspecialchars($row['nama_produk']); ?>
                         </h3>
                         <p class="text-xs text-slate-400 leading-relaxed text-justify line-clamp-6">
-                            Stasiun total kelas profesional yang menawarkan akurasi tingkat tinggi dengan jangkauan EDM reflectorless mumpuni hingga 500 meter. Dilengkapi sistem keamanan TSshield canggih dan ketahanan air bersertifikasi IP66 untuk medan berat.
+                            <?php echo htmlspecialchars($row['deskripsi']); ?>
                         </p>
                     </div>
                 </div>
@@ -279,31 +265,12 @@
                     </a>
                 </div>
             </div>
-
-            <div class="bg-white rounded-[2.5rem] border border-slate-100 p-6 shadow-xl shadow-slate-200/50 flex flex-col justify-between transition-all hover:scale-[1.03] hover:shadow-2xl duration-300">
-                <div>
-                    <div class="bg-slate-50 rounded-2xl p-4 flex justify-center items-center mb-6 relative overflow-hidden aspect-square">
-                        <span class="absolute top-3 left-3 bg-[#5AAC41] text-white text-[8px] font-bold px-2.5 py-1 rounded-full tracking-wider uppercase">
-                            Aerial Survey
-                        </span>
-                        <img src="assets/img/tambang.png" alt="Drone Survey" class="max-h-48 w-full object-cover rounded-xl">
-                    </div>
-                    <div class="space-y-2">
-                        <span class="text-[9px] font-bold text-[#5AAC41] tracking-widest uppercase">DJI Enterprise</span>
-                        <h3 class="text-lg font-extrabold text-[#043978] leading-snug min-h-[56px]">
-                            DJI MATRICE RTK SERIES DRONE MAPPING
-                        </h3>
-                        <p class="text-xs text-slate-400 leading-relaxed text-justify line-clamp-6">
-                            Solusi fotogrametri udara terintegrasi untuk akurasi peta ortofoto skala besar. Mendukung pemetaan topografi, kalkulasi volume tambang terbuka (*stockpile*), dan inspeksi koridor infrastruktur secara cepat and efisien.
-                        </p>
-                    </div>
-                </div>
-                <div class="pt-6">
-                    <a href="produk.php" class="w-full bg-black hover:bg-slate-900 text-white text-[11px] font-bold py-3.5 px-4 rounded-xl flex items-center justify-center gap-2 transition uppercase tracking-wider">
-                        Detail Produk <i class="fas fa-arrow-circle-right text-xs"></i>
-                    </a>
-                </div>
-            </div>
+            <?php 
+                } 
+            } else {
+                echo '<p class="col-span-full text-center text-slate-400">Belum ada produk unggulan yang tersedia.</p>';
+            }
+            ?>
         </div>
     </section>
 

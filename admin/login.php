@@ -15,8 +15,8 @@ if (isset($_POST['login'])) {
     $username = mysqli_real_escape_string($conn, $_POST['username']);
     $password = $_POST['password'];
 
-    // Cari username di database
-    $result = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
+    // PERBAIKAN: Menggunakan nama tabel standar untuk shared database (users_hafizh_2430511012)
+    $result = mysqli_query($conn, "SELECT * FROM users_hafizh_2430511012 WHERE username = '$username'");
 
     if (mysqli_num_rows($result) === 1) {
         $row = mysqli_fetch_assoc($result);

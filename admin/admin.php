@@ -18,11 +18,11 @@ unset($_SESSION['success_msg']);
 if (isset($_GET['hapus'])) {
     $id_hapus = mysqli_real_escape_string($conn, $_GET['hapus']);
     
-    $ambil_gambar = mysqli_query($conn, "SELECT gambar FROM produk WHERE id = '$id_hapus'");
+    $ambil_gambar = mysqli_query($conn, "SELECT gambar FROM produk_hafizh_2430511012 WHERE id = '$id_hapus'");
     $data_gambar = mysqli_fetch_assoc($ambil_gambar);
     $nama_file = $data_gambar['gambar'] ?? '';
 
-    if (mysqli_query($conn, "DELETE FROM produk WHERE id = '$id_hapus'")) {
+    if (mysqli_query($conn, "DELETE FROM produk_hafizh_2430511012 WHERE id = '$id_hapus'")) {
         if ($nama_file && file_exists("../assets/img/" . $nama_file)) {
             unlink("../assets/img/" . $nama_file);
         }
@@ -37,9 +37,9 @@ if (isset($_POST['tambah_kategori_baru'])) {
     $kategori_baru = mysqli_real_escape_string($conn, $_POST['nama_kategori_baru']);
     
     if (!empty($kategori_baru)) {
-        $cek_kategori = mysqli_query($conn, "SELECT * FROM kategori WHERE nama_kategori = '$kategori_baru'");
+        $cek_kategori = mysqli_query($conn, "SELECT * FROM kategori_hafizh_2430511012 WHERE nama_kategori = '$kategori_baru'");
         if (mysqli_num_rows($cek_kategori) == 0) {
-            mysqli_query($conn, "INSERT INTO kategori (nama_kategori) VALUES ('$kategori_baru')");
+            mysqli_query($conn, "INSERT INTO kategori_hafizh_2430511012 (nama_kategori) VALUES ('$kategori_baru')");
             $_SESSION['success_msg'] = "Kategori baru berhasil ditambahkan!";
             header("Location: admin.php");
             exit;
@@ -52,7 +52,7 @@ if (isset($_POST['tambah_kategori_baru'])) {
 // LOGIKA HAPUS KATEGORI
 if (isset($_GET['hapus_kategori'])) {
     $id_kat_hapus = mysqli_real_escape_string($conn, $_GET['hapus_kategori']);
-    if (mysqli_query($conn, "DELETE FROM kategori WHERE id = '$id_kat_hapus'")) {
+    if (mysqli_query($conn, "DELETE FROM kategori_hafizh_2430511012 WHERE id = '$id_kat_hapus'")) {
         $_SESSION['success_msg'] = "Kategori berhasil dihapus dari sistem!";
         header("Location: admin.php");
         exit;
@@ -67,7 +67,7 @@ if (isset($_POST['tambah_produk'])) {
     $harga     = mysqli_real_escape_string($conn, $_POST['harga']);
     $gambar    = $_FILES['gambar']['name'];
     
-    if (mysqli_query($conn, "INSERT INTO produk (nama_produk, kategori, deskripsi, harga, gambar) VALUES ('$nama', '$kategori', '$deskripsi', '$harga', '$gambar')")) {
+    if (mysqli_query($conn, "INSERT INTO produk_hafizh_2430511012 (nama_produk, kategori, deskripsi, harga, gambar) VALUES ('$nama', '$kategori', '$deskripsi', '$harga', '$gambar')")) {
         move_uploaded_file($_FILES['gambar']['tmp_name'], "../assets/img/" . $gambar);
         $_SESSION['success_msg'] = "Produk berhasil ditambahkan!";
         header("Location: admin.php");
@@ -86,9 +86,9 @@ if (isset($_POST['update_produk'])) {
     if ($_FILES['gambar']['name'] != "") {
         $gambar = $_FILES['gambar']['name'];
         move_uploaded_file($_FILES['gambar']['tmp_name'], "../assets/img/" . $gambar);
-        $sql = "UPDATE produk SET nama_produk='$nama', kategori='$kategori', deskripsi='$deskripsi', harga='$harga', gambar='$gambar' WHERE id='$id_edit'";
+        $sql = "UPDATE produk_hafizh_2430511012 SET nama_produk='$nama', kategori='$kategori', deskripsi='$deskripsi', harga='$harga', gambar='$gambar' WHERE id='$id_edit'";
     } else {
-        $sql = "UPDATE produk SET nama_produk='$nama', kategori='$kategori', deskripsi='$deskripsi', harga='$harga' WHERE id='$id_edit'";
+        $sql = "UPDATE produk_hafizh_2430511012 SET nama_produk='$nama', kategori='$kategori', deskripsi='$deskripsi', harga='$harga' WHERE id='$id_edit'";
     }
 
     if (mysqli_query($conn, $sql)) {
@@ -107,7 +107,7 @@ if (isset($_POST['update_layanan'])) {
     $kategori_l      = mysqli_real_escape_string($conn, $_POST['kategori_layanan']);
     $pesan_l         = mysqli_real_escape_string($conn, $_POST['pesan_layanan']);
 
-    $sql_l = "UPDATE layanan SET nama='$nama_l', email='$email_l', telepon='$telepon_l', kategori='$kategori_l', pesan='$pesan_l' WHERE id='$id_layanan_edit'";
+    $sql_l = "UPDATE layanan_hafizh_2430511012 SET nama='$nama_l', email='$email_l', telepon='$telepon_l', kategori='$kategori_l', pesan='$pesan_l' WHERE id='$id_layanan_edit'";
     if (mysqli_query($conn, $sql_l)) {
         $_SESSION['success_msg'] = "Data layanan diperbarui!";
         header("Location: admin.php");
@@ -118,7 +118,7 @@ if (isset($_POST['update_layanan'])) {
 // --- 7. LOGIKA HAPUS PERMINTAAN LAYANAN KLIEN ---
 if (isset($_GET['hapus_layanan'])) {
     $id_layanan_hapus = mysqli_real_escape_string($conn, $_GET['hapus_layanan']);
-    if (mysqli_query($conn, "DELETE FROM layanan WHERE id = '$id_layanan_hapus'")) {
+    if (mysqli_query($conn, "DELETE FROM layanan_hafizh_2430511012 WHERE id = '$id_layanan_hapus'")) {
         $_SESSION['success_msg'] = "Data ulasan berhasil dihapus!";
         header("Location: admin.php");
         exit;
@@ -126,10 +126,10 @@ if (isset($_GET['hapus_layanan'])) {
 }
 
 // --- 8. LOGIKA LAPORAN INVENTORY ---
-$data_inventory = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM produk"));
+$data_inventory = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM produk_hafizh_2430511012"));
 $total_unit = $data_inventory['total'] ?? 0;
 
-$data_layanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM layanan"));
+$data_layanan = mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(*) as total FROM layanan_hafizh_2430511012"));
 $total_layanan = $data_layanan['total'] ?? 0;
 ?>
 
@@ -263,7 +263,7 @@ $total_layanan = $data_layanan['total'] ?? 0;
                 <tbody class="divide-y divide-slate-100">
                     <?php
                     $no = 1;
-                    $res = mysqli_query($conn, "SELECT * FROM produk ORDER BY id DESC");
+                    $res = mysqli_query($conn, "SELECT * FROM produk_hafizh_2430511012 ORDER BY id DESC");
                     while($row = mysqli_fetch_assoc($res)) {
                     ?>
                     <tr class="hover:bg-slate-50/50 transition">
@@ -318,7 +318,7 @@ $total_layanan = $data_layanan['total'] ?? 0;
                 <tbody class="divide-y divide-slate-100">
                     <?php
                     $no_l = 1;
-                    $res_l = mysqli_query($conn, "SELECT * FROM layanan ORDER BY id DESC");
+                    $res_l = mysqli_query($conn, "SELECT * FROM layanan_hafizh_2430511012 ORDER BY id DESC");
                     while($row_l = mysqli_fetch_assoc($res_l)) {
                     ?>
                     <tr class="hover:bg-slate-50/50 transition">
@@ -393,7 +393,7 @@ $total_layanan = $data_layanan['total'] ?? 0;
             <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-2">Daftar Kategori Aktif</label>
             <div class="flex-1 overflow-y-auto space-y-2 max-h-64 pr-1">
                 <?php 
-                $list_kat = mysqli_query($conn, "SELECT * FROM kategori ORDER BY nama_kategori ASC");
+                $list_kat = mysqli_query($conn, "SELECT * FROM kategori_hafizh_2430511012 ORDER BY nama_kategori ASC");
                 while($lk = mysqli_fetch_assoc($list_kat)) {
                 ?>
                     <div class="flex justify-between items-center bg-slate-50 border border-slate-100 rounded-xl px-4 py-3">
@@ -415,7 +415,7 @@ $total_layanan = $data_layanan['total'] ?? 0;
                 <input type="text" name="nama_produk" placeholder="Nama Produk Instrumen" required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41]">
                 <select name="kategori" required class="w-full px-4 py-3 rounded-xl bg-slate-50 border border-slate-100 outline-none font-semibold text-xs focus:ring-2 focus:ring-[#5AAC41]">
                     <?php 
-                    $get_kat = mysqli_query($conn, "SELECT * FROM kategori ORDER BY nama_kategori ASC");
+                    $get_kat = mysqli_query($conn, "SELECT * FROM kategori_hafizh_2430511012 ORDER BY nama_kategori ASC");
                     while($k = mysqli_fetch_assoc($get_kat)) {
                         echo "<option value='".htmlspecialchars($k['nama_kategori'])."'>".htmlspecialchars($k['nama_kategori'])."</option>";
                     }
@@ -441,7 +441,7 @@ $total_layanan = $data_layanan['total'] ?? 0;
                 <input type="text" name="nama_produk" id="edit-nama" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none focus:ring-2 focus:ring-[#5AAC41]">
                 <select name="kategori" id="edit-kategori" required class="w-full px-4 py-3 rounded-xl bg-slate-50 font-bold text-xs border border-slate-100 outline-none focus:ring-2 focus:ring-[#5AAC41]">
                     <?php 
-                    $get_kat_edit = mysqli_query($conn, "SELECT * FROM kategori ORDER BY nama_kategori ASC");
+                    $get_kat_edit = mysqli_query($conn, "SELECT * FROM kategori_hafizh_2430511012 ORDER BY nama_kategori ASC");
                     while($ke = mysqli_fetch_assoc($get_kat_edit)) {
                         echo "<option value='".htmlspecialchars($ke['nama_kategori'])."'>".htmlspecialchars($ke['nama_kategori'])."</option>";
                     }

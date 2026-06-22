@@ -71,8 +71,8 @@ include 'admin/koneksi.php';
                     </button>
                     
                     <?php
-                    // Ambil daftar kategori dinamis dari database
-                    $get_filters = mysqli_query($conn, "SELECT * FROM kategori ORDER BY nama_kategori ASC");
+                    // PERBAIKAN: Ambil daftar kategori dinamis dari database (Tabel kategori_hafizh_2430511012)
+                    $get_filters = mysqli_query($conn, "SELECT * FROM kategori_hafizh_2430511012 ORDER BY nama_kategori ASC");
                     while($f = mysqli_fetch_assoc($get_filters)) {
                     ?>
                         <button onclick="filterKategori('<?php echo htmlspecialchars($f['nama_kategori']); ?>', this)" class="btn-kategori w-full text-left bg-slate-50 hover:bg-slate-100 text-slate-600 text-xs font-bold px-5 py-3.5 rounded-xl transition flex justify-between items-center group">
@@ -88,7 +88,8 @@ include 'admin/koneksi.php';
             <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 
                 <?php
-                $query = mysqli_query($conn, "SELECT * FROM produk ORDER BY id DESC");
+                // PERBAIKAN: Ambil data produk dari tabel produk_hafizh_2430511012
+                $query = mysqli_query($conn, "SELECT * FROM produk_hafizh_2430511012 ORDER BY id DESC");
                 
                 if (mysqli_num_rows($query) > 0) {
                     while ($row = mysqli_fetch_assoc($query)) {

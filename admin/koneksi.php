@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$user = "root";
-$pass = "";
-$db   = "nusa";
+$user = "ifummiid_kelasa";
+$pass = "pemweb_db_a";
+$db   = "ifummiid_kelasa";
 
 $conn = mysqli_connect($host, $user, $pass, $db);
 
